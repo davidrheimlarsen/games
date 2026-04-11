@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Survival Game</title>
+    <link rel="stylesheet" href="survival.css">
+</head>
+<body>
+    <nav class="page-nav"><a href="../index.html">← Home</a></nav>
+    <div class="game-shell">
+        <h1>Survival</h1>
+        <div class="customization">
+            <label>
+                Name:
+                <input id="playerName" type="text" value="Survivor" maxlength="12" />
+            </label>
+            <label>
+                Color:
+                <select id="playerColor">
+                    <option value="#4caf50">Green</option>
+                    <option value="#2196f3">Blue</option>
+                    <option value="#ff9800">Orange</option>
+                    <option value="#9c27b0">Purple</option>
+                </select>
+            </label>
+            <label>
+                Avatar:
+                <select id="playerStyle">
+                    <option value="square">Square</option>
+                    <option value="rounded">Rounded</option>
+                    <option value="circle">Circle</option>
+                </select>
+            </label>
+            <label>
+                Avatar Upload:
+                <input id="avatarUpload" type="file" accept="image/*" />
+            </label>
+            <label>
+                Difficulty:
+                <select id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </label>
+            <label>
+                Background:
+                <select id="backgroundStyle">
+                    <option value="wasteland">Wasteland</option>
+                    <option value="forest">Forest</option>
+                    <option value="sand">Sand</option>
+                    <option value="night">Night</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </label>
+            <label>
+                Upload:
+                <input id="backgroundUpload" type="file" accept="image/*" />
+            </label>
+            <label>
+                Monster Color:
+                <input id="monsterColor" type="color" value="#e53935" />
+            </label>
+            <label>
+                Monster Upload:
+                <input id="monsterUpload" type="file" accept="image/*" />
+            </label>
+            <button id="clearMonsterTexture">Clear Monster Texture</button>
+            <label>
+                Tint:
+                <input id="backgroundColor" type="color" value="#2d2d2d" />
+            </label>
+            <button id="applyCharacter">Apply</button>
+            <button id="resetGame">Reset Game</button>
+            <button id="fullscreen">Zoom</button>
+        </div>
+        <div class="hud">
+            <div>Health: <span id="health">100</span></div>
+            <div>Food: <span id="food">100</span></div>
+            <div>Day: <span id="day">1</span></div>
+            <div>Monsters: <span id="monsterCount">0</span></div>
+        </div>
+        <div class="game-area" id="gameArea">
+            <div class="player square" id="player"></div>
+        </div>
+        <div class="controls">
+            <button id="moveUp">Up</button>
+            <button id="moveLeft">Left</button>
+            <button id="moveDown">Down</button>
+            <button id="moveRight">Right</button>
+            <button id="attack">Attack</button>
+            <button id="search">Search</button>
+            <button id="heal">Heal</button>
+        </div>
+        <div class="log" id="log">Use the buttons or arrow keys to move. Space to attack, S to search. Find monsters and fight them.</div>
+    </div>
+        <script src="survival.js" defer></script>
+</body>
+</html>
+

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stack blocks/with rainbow hedgey</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="stack-blocks.css">
+</head>
+<body>
+    <nav class="page-nav"><a href="../index.html">← Home</a></nav>
+    <div class="game-container">
+        <div class="score-display">
+            <span class="score-label">Score</span>
+            <span class="score-value" id="score">0</span>
+            <span class="best-score" id="best-score">Best: 0</span>
+        </div>
+        
+        <canvas id="game-canvas" width="400" height="600"></canvas>
+        
+        <p class="instructions" id="instructions">Click or Press Space to Stack</p>
+        
+        <div class="combo-display" id="combo">🔥 x3</div>
+    </div>
+
+    <div class="overlay" id="game-over-overlay">
+        <div class="game-over-modal">
+            <h2 class="game-over-title">Game Over</h2>
+            <div class="final-score" id="final-score">0</div>
+            <p class="final-score-label">Blocks Stacked</p>
+            <p class="new-best" id="new-best">🏆 New Best!</p>
+            <button class="play-again-btn" id="play-again-btn">Play Again</button>
+        </div>
+    </div>
+
+    <div class="perfect-indicator" id="perfect">PERFECT!</div>
+
+    <div class="difficulty-selector" id="difficulty-selector">
+        <span class="difficulty-label">Select Difficulty</span>
+        <div class="difficulty-buttons">
+            <button class="difficulty-btn easy" data-speed="2" data-increment="0.1">Easy</button>
+            <button class="difficulty-btn medium selected" data-speed="4" data-increment="0.15">Medium</button>
+            <button class="difficulty-btn hard" data-speed="5" data-increment="0.2">Hard</button>
+        </div>
+    </div>
+
+        <script src="stack-blocks.js" defer></script>
+</body>
+</html>
+

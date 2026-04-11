@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games Home</title>
+    <style>
+        :root { color-scheme: dark; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: "Inter", system-ui, sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at top, #3b82f6 0%, #0f172a 45%, #020617 100%); color: #e2e8f0; }
+        .page { max-width: 980px; width: 100%; padding: 32px; }
+        h1 { margin: 0 0 16px; font-size: clamp(2.2rem, 4vw, 3.75rem); letter-spacing: -0.04em; }
+        p { margin: 0 0 24px; color: #94a3b8; font-size: 1rem; max-width: 720px; line-height: 1.7; }
+        .cards { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+        .card { display: flex; flex-direction: column; gap: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(148, 163, 184, 0.12); border-radius: 24px; padding: 24px; text-decoration: none; color: inherit; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+        .card:hover { transform: translateY(-4px); border-color: rgba(59, 130, 246, 0.45); box-shadow: 0 20px 50px rgba(15, 23, 42, 0.35); }
+        .card-title { font-size: 1.4rem; margin: 0; }
+        .card-desc { margin: 0; color: #94a3b8; line-height: 1.65; }
+        .footer { margin-top: 40px; color: #64748b; font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <h1>My Games</h1>
+        <p>Welcome to the games collection. Click a card to open a project. Each game is self-contained in its own folder so it can be hosted on GitHub Pages easily.</p>
+        <div class="cards">
+            <a class="card" href="stack-blocks/stack-blocks.html">
+                <div class="card-title">Stack Blocks</div>
+                <div class="card-desc">A polished stacking arcade game with colorful block physics, score tracking, difficulty settings, and replay support.</div>
+            </a>
+            <a class="card" href="survival/survival.html">
+                <div class="card-title">Survival</div>
+                <div class="card-desc">A survival roguelike mini-game with configurable player, monsters, day cycles, and resource management.</div>
+            </a>
+        </div>
+        <p class="footer">Add new games by creating a new folder and a link here. Each game should include its own HTML, CSS, and JS file named after the project.</p>
+    </main>
+</body>
+</html>

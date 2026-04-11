@@ -1,0 +1,12 @@
+<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="wasteland" patternUnits="userSpaceOnUse" width="40" height="40">
+      <rect width="40" height="40" fill="#8B4513"/>
+      <circle cx="10" cy="10" r="2" fill="#A0522D"/>
+      <circle cx="30" cy="30" r="2" fill="#A0522D"/>
+      <circle cx="10" cy="30" r="1" fill="#696969"/>
+      <circle cx="30" cy="10" r="1" fill="#696969"/>
+    </pattern>
+  </defs>
+  <rect width="40" height="40" fill="url(#wasteland)"/>
+</svg>
