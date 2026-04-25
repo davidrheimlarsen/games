@@ -76,6 +76,22 @@ class EndlessRunner {
         this.invincible = false;
         this.invincibleDuration = 0;
         
+        // Shop system
+        this.totalPoints = parseInt(localStorage.getItem('totalPoints') || '0');
+        this.purchasedUpgrades = JSON.parse(localStorage.getItem('purchasedUpgrades') || '{}');
+        this.shopItems = [
+            { id: 'doubleJump', name: 'Double Jump', cost: 100, description: 'Start with double jump ability', purchased: false },
+            { id: 'speedBoost', name: 'Speed Boost', cost: 150, description: '+10% permanent speed increase', purchased: false },
+            { id: 'magnetPowerUp', name: 'Power-Up Magnet', cost: 200, description: 'Attract nearby power-ups', purchased: false },
+            { id: 'extraLife', name: 'Extra Life', cost: 300, description: 'One-time respawn on death', purchased: false },
+            { id: 'slowMotionPlus', name: 'Slow Motion+', cost: 250, description: 'Slow motion lasts 8 seconds instead of 5', purchased: false }
+        ];
+        
+        // Ghost system
+        this.ghostData = null;
+        this.currentGhostRecording = [];
+        this.bestRunData = JSON.parse(localStorage.getItem('bestRunData') || 'null');
+        
         // Particles for effects
         this.particles = [];
         
@@ -115,11 +131,19 @@ class EndlessRunner {
         
         // Difficulty buttons
         document.querySelectorAll('.difficulty-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (!this.isGameStarted) {
-                    this.setDifficulty(btn);
-                }
+            btn.addEventListener('click', (e) => {
+                this.setDifficulty(e.target);
             });
+        });
+        
+        // Shop button
+        document.getElementById('shop-btn').addEventListener('click', () => {
+            this.openShop();
+        });
+        
+        // Close shop button
+        document.getElementById('close-shop-btn').addEventListener('click', () => {
+            this.closeShop();
         });
     }
     
@@ -671,6 +695,151 @@ class EndlessRunner {
         }
     }
     
+    // Shop system methods
+    purchaseItem(itemId) {
+        const item = this.shopItems.find(i => i.id === itemId);
+        if (!item) return false;
+        
+        if (this.totalPoints >= item.cost && !this.purchasedUpgrades[itemId]) {
+            this.totalPoints -= item.cost;
+            this.purchasedUpgrades[itemId] = true;
+            item.purchased = true;
+            
+            // Save to localStorage
+            localStorage.setItem('totalPoints', this.totalPoints.toString());
+            localStorage.setItem('purchasedUpgrades', JSON.stringify(this.purchasedUpgrades));
+            
+            // Apply upgrade effects
+            this.applyUpgrade(itemId);
+            
+            this.updateUI();
+            return true;
+        }
+        return false;
+    }
+    
+    applyUpgrade(itemId) {
+        switch (itemId) {
+            case 'doubleJump':
+                this.player.maxJumps = 2;
+                break;
+            case 'speedBoost':
+                this.gameSpeed *= 1.1;
+                break;
+            case 'magnetPowerUp':
+                // Applied in power-up collision
+                break;
+            case 'extraLife':
+                this.player.hasExtraLife = true;
+                break;
+            case 'slowMotionPlus':
+                // Applied when slow motion is activated
+                break;
+        }
+    }
+    
+    addPoints(points) {
+        this.totalPoints += points;
+        localStorage.setItem('totalPoints', this.totalPoints.toString());
+        this.updateUI();
+    }
+    
+    // Ghost system methods
+    startGhostRecording() {
+        this.currentGhostRecording = [];
+        this.recordingFrame = 0;
+    }
+    
+    recordGhostFrame() {
+        if (!this.isGameStarted || this.isGameOver) return;
+        
+        this.currentGhostRecording.push({
+            frame: this.recordingFrame++,
+            x: this.player.x,
+            y: this.player.y,
+            velocityY: this.player.velocityY,
+            isJumping: this.player.isJumping
+        });
+    }
+    
+    saveBestRun() {
+        if (this.currentGhostRecording.length > 0) {
+            this.bestRunData = {
+                recording: this.currentGhostRecording,
+                score: this.score,
+                distance: this.distance,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('bestRunData', JSON.stringify(this.bestRunData));
+        }
+    }
+    
+    loadGhost() {
+        if (this.bestRunData) {
+            this.ghostData = {
+                ...this.bestRunData,
+                currentFrame: 0
+            };
+        }
+    }
+    
+    updateGhost() {
+        if (!this.ghostData) return;
+        
+        const recording = this.ghostData.recording;
+        if (this.ghostData.currentFrame < recording.length) {
+            const frame = recording[this.ghostData.currentFrame];
+            this.ghostData.x = frame.x;
+            this.ghostData.y = frame.y;
+            this.ghostData.currentFrame++;
+        }
+    }
+    
+    // Shop UI methods
+    openShop() {
+        this.renderShopItems();
+        document.getElementById('shop-overlay').classList.add('show');
+    }
+    
+    closeShop() {
+        document.getElementById('shop-overlay').classList.remove('show');
+    }
+    
+    renderShopItems() {
+        const shopContainer = document.getElementById('shop-items');
+        shopContainer.innerHTML = '';
+        
+        this.shopItems.forEach(item => {
+            const isPurchased = this.purchasedUpgrades[item.id];
+            const canAfford = this.totalPoints >= item.cost;
+            
+            const shopItem = document.createElement('div');
+            shopItem.className = `shop-item ${isPurchased ? 'purchased' : ''} ${!canAfford && !isPurchased ? 'cant-afford' : ''}`;
+            
+            shopItem.innerHTML = `
+                <div class="shop-item-info">
+                    <h3 class="shop-item-name">${item.name}</h3>
+                    <p class="shop-item-description">${item.description}</p>
+                    <div class="shop-item-cost">${isPurchased ? '✅ Purchased' : `${item.cost} Points`}</div>
+                </div>
+                <button class="shop-item-btn" 
+                        data-item-id="${item.id}" 
+                        ${isPurchased || !canAfford ? 'disabled' : ''}>
+                    ${isPurchased ? 'Owned' : 'Buy'}
+                </button>
+            `;
+            
+            if (!isPurchased && canAfford) {
+                shopItem.querySelector('.shop-item-btn').addEventListener('click', () => {
+                    this.purchaseItem(item.id);
+                    this.renderShopItems(); // Refresh shop display
+                });
+            }
+            
+            shopContainer.appendChild(shopItem);
+        });
+    }
+    
     updateDynamicObstacleInterval() {
         // Calculate spacing based on distance traveled
         // Start at max interval, decrease to min interval as distance increases
@@ -734,11 +903,34 @@ class EndlessRunner {
         this.particles = this.particles.filter(particle => {
             particle.x += particle.vx;
             particle.y += particle.vy;
-            particle.vy += 0.2;
+            particle.vy += 0.2; // Gravity
             particle.life -= 0.02;
-            particle.size *= 0.98;
             
             return particle.life > 0;
+        });
+    }
+    
+    updateBackgroundElements() {
+        // Update clouds
+        this.clouds.forEach(cloud => {
+            cloud.x -= this.gameSpeed * this.speedMultiplier * 0.3; // Parallax effect
+            
+            // Reset cloud position when it goes off screen
+            if (cloud.x + cloud.width < 0) {
+                cloud.x = this.canvas.width;
+                cloud.y = Math.random() * 150; // Random height
+            }
+        });
+        
+        // Update background elements
+        this.backgroundElements.forEach(element => {
+            element.x -= this.gameSpeed * this.speedMultiplier * 0.2; // Slower parallax
+            
+            // Reset element position when it goes off screen
+            if (element.x + element.width < 0) {
+                element.x = this.canvas.width;
+                element.y = this.ground.y - element.height;
+            }
         });
     }
     
@@ -839,6 +1031,9 @@ class EndlessRunner {
         
         // Draw power-ups
         this.drawPowerUps();
+        
+        // Draw ghost
+        this.drawGhost();
         
         // Draw game over overlay
         if (this.isGameOver) {
@@ -1175,6 +1370,34 @@ class EndlessRunner {
         this.ctx.globalAlpha = 1;
     }
     
+    gameOver() {
+        this.isGameOver = true;
+        this.isGameStarted = false;
+        
+        // Save best run for ghost
+        this.saveBestRun();
+        
+        // Add points to total (10% of score as points)
+        const pointsEarned = Math.floor(this.score * 0.1);
+        this.addPoints(pointsEarned);
+        
+        // Update best score
+        if (this.score > this.bestScore) {
+            this.bestScore = this.score;
+            localStorage.setItem('endlessRunnerBest', this.bestScore.toString());
+            document.getElementById('new-best').classList.add('show');
+        } else {
+            document.getElementById('new-best').classList.remove('show');
+        }
+        
+        this.updateUI();
+        document.getElementById('final-score').textContent = this.score;
+        document.getElementById('points-earned').textContent = `Points Earned: ${pointsEarned}`;
+        
+        // Show the game over overlay
+        document.getElementById('game-over-overlay').classList.add('show');
+    }
+    
     drawGameOverOverlay() {
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -1191,44 +1414,84 @@ class EndlessRunner {
             this.ctx.fillStyle = '#10b981';
             this.ctx.fillText('NEW BEST!', this.canvas.width / 2, this.canvas.height / 2 + 50);
         }
+        
+        this.ctx.shadowBlur = 0;
+        
+        this.ctx.restore();
     }
     
-    gameOver() {
-        this.isGameOver = true;
+    drawGhost() {
+        if (!this.ghostData) return;
         
-        if (this.score > this.bestScore) {
-            this.bestScore = this.score;
-            localStorage.setItem('endlessRunnerBest', this.bestScore.toString());
-            document.getElementById('new-best').classList.add('show');
-        } else {
-            document.getElementById('new-best').classList.remove('show');
-        }
+        this.ctx.save();
+        this.ctx.translate(0, this.cameraY);
         
-        this.updateUI();
-        document.getElementById('final-score').textContent = this.score;
-        document.getElementById('game-over-overlay').classList.add('show');
+        // Draw ghost as semi-transparent player
+        this.ctx.fillStyle = 'rgba(100, 200, 255, 0.4)';
+        this.ctx.fillRect(this.ghostData.x, this.ghostData.y, this.player.width, this.player.height);
+        
+        // Add ghost label
+        this.ctx.fillStyle = 'rgba(100, 200, 255, 0.8)';
+        this.ctx.font = '12px Arial';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText('GHOST', this.ghostData.x + this.player.width / 2, this.ghostData.y - 5);
+        
+        this.ctx.restore();
+    }
+    
+    drawParticles() {
+    this.ctx.save();
+    this.ctx.translate(0, this.cameraY);
+    
+    this.particles.forEach(particle => {
+        this.ctx.fillStyle = particle.color;
+        this.ctx.globalAlpha = particle.life;
+        this.ctx.beginPath();
+        this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        this.ctx.fill();
+    });
+        
+    this.ctx.restore();
+    this.ctx.globalAlpha = 1;
+    }
+    
+    updateUI() {
+        document.getElementById('score').textContent = this.score;
+        document.getElementById('best-score').textContent = `Best: ${this.bestScore}`;
+        document.getElementById('total-points').textContent = this.totalPoints;
+        document.getElementById('shop-points').textContent = this.totalPoints;
     }
     
     resetGame() {
-        this.score = 0;
-        this.distance = 0;
-        this.speedMultiplier = 1;
-        this.maxSpeedMultiplier = this.baseMaxSpeed;
+        // Hide the game over overlay
+        document.getElementById('game-over-overlay').classList.remove('show');
+        
+        // Reset game state
         this.isGameOver = false;
         this.isGameStarted = false;
+        this.score = 0;
+        this.speedMultiplier = 1;
+        this.distance = 0;
+        this.obstacleTimer = 0;
+        this.aerialObstacleTimer = 0;
+        this.groundPlatformTimer = 0;
+        this.mountainTimer = 0;
+        this.powerUpTimer = 0;
+        
+        // Clear arrays
         this.obstacles = [];
         this.aerialObstacles = [];
         this.groundPlatforms = [];
         this.mountains = [];
         this.powerUps = [];
         this.particles = [];
-        this.obstacleTimer = 0;
-        this.aerialObstacleTimer = 0;
-        this.groundPlatformTimer = 0;
-        this.mountainTimer = 0;
-        this.powerUpTimer = 0;
-        this.powerUpInterval = this.basePowerUpInterval;
-        this.obstacleInterval = this.baseObstacleInterval;
+        
+        // Reset player position
+        this.player.y = this.canvas.height - 100;
+        this.player.velocityY = 0;
+        this.player.isJumping = false;
+        this.player.jumpsRemaining = this.player.maxJumps;
+        this.player.trail = [];
         
         // Reset power-up effects
         this.slowMotion = false;
@@ -1236,37 +1499,28 @@ class EndlessRunner {
         this.invincible = false;
         this.invincibleDuration = 0;
         
-        this.player.y = this.canvas.height - 100;
-        this.player.velocityY = 0;
-        this.player.isJumping = false;
-        this.player.jumpsRemaining = this.player.maxJumps;
-        this.player.trail = [];
-        
         // Reset camera
         this.cameraY = 0;
         this.targetCameraY = 0;
         
-        document.getElementById('game-over-overlay').classList.remove('show');
+        // Update UI
+        this.updateUI();
+        
+        // Show instructions and difficulty selector
         document.getElementById('instructions').style.display = 'block';
         document.getElementById('difficulty-selector').style.display = 'block';
-        document.getElementById('speed').textContent = 'Speed: 1.0x';
-        
-        this.updateUI();
-    }
-    
-    updateUI() {
-        document.getElementById('score').textContent = this.score;
-        document.getElementById('best-score').textContent = `Best: ${this.bestScore}`;
     }
     
     gameLoop() {
         if (!this.isGameOver) {
+            this.updateGameSpeed();
             this.updatePlayer();
             this.updateObstacles();
-            this.updateParticles();
-            this.updateBackground();
-            this.updateGameSpeed();
             this.updateCamera();
+            this.updateParticles();
+            this.updateBackgroundElements();
+            this.updateGhost();
+            this.recordGhostFrame();
         }
         
         this.draw();

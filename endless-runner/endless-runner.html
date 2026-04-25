@@ -14,7 +14,10 @@
             <span class="score-label">Score</span>
             <span class="score-value" id="score">0</span>
             <span class="best-score" id="best-score">Best: 0</span>
+            <span class="points-display" id="points-display">Points: <span id="total-points">0</span></span>
         </div>
+        
+        <button class="shop-btn" id="shop-btn">🛒 Shop</button>
         
         <canvas id="game-canvas" width="800" height="400"></canvas>
         
@@ -28,6 +31,7 @@
             <h2 class="game-over-title">Game Over</h2>
             <div class="final-score" id="final-score">0</div>
             <p class="final-score-label">Distance Traveled</p>
+            <p class="points-earned" id="points-earned">Points Earned: 0</p>
             <p class="new-best" id="new-best">🏆 New Best!</p>
             <button class="play-again-btn" id="play-again-btn">Play Again</button>
         </div>
@@ -39,6 +43,17 @@
             <button class="difficulty-btn easy" data-speed="3" data-gravity="0.5">Easy</button>
             <button class="difficulty-btn medium selected" data-speed="5" data-gravity="0.8">Medium</button>
             <button class="difficulty-btn hard" data-speed="7" data-gravity="1.2">Hard</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="shop-overlay">
+        <div class="shop-modal">
+            <h2 class="shop-title">🛒 Power-Up Shop</h2>
+            <div class="points-balance">Points: <span id="shop-points">0</span></div>
+            <div class="shop-items" id="shop-items">
+                <!-- Shop items will be dynamically added here -->
+            </div>
+            <button class="close-shop-btn" id="close-shop-btn">Close</button>
         </div>
     </div>
 
