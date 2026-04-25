@@ -106,6 +106,8 @@ class EndlessRunner {
         this.setupEventListeners();
         this.updateUI();
         this.generateBackgroundElements();
+        this.loadGhost();
+        this.startGhostRecording();
         this.gameLoop();
     }
     
@@ -176,6 +178,8 @@ class EndlessRunner {
             this.isGameStarted = true;
             document.getElementById('instructions').style.display = 'none';
             document.getElementById('difficulty-selector').style.display = 'none';
+            // Start ghost recording when game actually starts
+            this.startGhostRecording();
         }
         
         if (this.player.jumpsRemaining > 0) {
@@ -763,7 +767,8 @@ class EndlessRunner {
     }
     
     saveBestRun() {
-        if (this.currentGhostRecording.length > 0) {
+        // Only save if this is a new best score
+        if (this.currentGhostRecording.length > 0 && this.score > this.bestScore) {
             this.bestRunData = {
                 recording: this.currentGhostRecording,
                 score: this.score,
@@ -784,7 +789,7 @@ class EndlessRunner {
     }
     
     updateGhost() {
-        if (!this.ghostData) return;
+        if (!this.ghostData || !this.isGameStarted) return;
         
         const recording = this.ghostData.recording;
         if (this.ghostData.currentFrame < recording.length) {
@@ -1426,15 +1431,33 @@ class EndlessRunner {
         this.ctx.save();
         this.ctx.translate(0, this.cameraY);
         
-        // Draw ghost as semi-transparent player
-        this.ctx.fillStyle = 'rgba(100, 200, 255, 0.4)';
-        this.ctx.fillRect(this.ghostData.x, this.ghostData.y, this.player.width, this.player.height);
+        // Draw ghost as a distinct purple circle with glow effect
+        const ghostX = this.ghostData.x + this.player.width / 2;
+        const ghostY = this.ghostData.y + this.player.height / 2;
         
-        // Add ghost label
-        this.ctx.fillStyle = 'rgba(100, 200, 255, 0.8)';
-        this.ctx.font = '12px Arial';
+        // Add glow effect
+        this.ctx.shadowBlur = 15;
+        this.ctx.shadowColor = 'rgba(147, 51, 234, 0.8)';
+        
+        // Draw ghost as a circle instead of rectangle
+        this.ctx.fillStyle = 'rgba(147, 51, 234, 0.6)';
+        this.ctx.beginPath();
+        this.ctx.arc(ghostX, ghostY, this.player.width / 2, 0, Math.PI * 2);
+        this.ctx.fill();
+        
+        // Add inner circle for more distinction
+        this.ctx.fillStyle = 'rgba(196, 181, 253, 0.8)';
+        this.ctx.beginPath();
+        this.ctx.arc(ghostX, ghostY, this.player.width / 3, 0, Math.PI * 2);
+        this.ctx.fill();
+        
+        // Add ghost label with better styling
+        this.ctx.shadowBlur = 5;
+        this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+        this.ctx.fillStyle = '#9333ea';
+        this.ctx.font = 'bold 10px Outfit';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText('GHOST', this.ghostData.x + this.player.width / 2, this.ghostData.y - 5);
+        this.ctx.fillText('GHOST', ghostX, this.ghostData.y - 8);
         
         this.ctx.restore();
     }
@@ -1502,6 +1525,9 @@ class EndlessRunner {
         // Reset camera
         this.cameraY = 0;
         this.targetCameraY = 0;
+        
+        // Restart ghost recording
+        this.startGhostRecording();
         
         // Update UI
         this.updateUI();
