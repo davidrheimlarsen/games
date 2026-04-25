@@ -21,7 +21,7 @@
         .panda-king:hover { color: #f59e0b; transform: scale(1.05); }
         .panda-king .panda-text { font-weight: bold; background: linear-gradient(45deg, #f59e0b, #ef4444, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .panda-king .panda-bg { display: inline-block; padding: 4px 8px; border-radius: 8px; background-color: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.3); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
-        .vibe-message { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2rem; font-weight: bold; background: linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; z-index: 2000; opacity: 0; transition: opacity 2s ease; pointer-events: none; }
+        .vibe-message { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); font-size: 1.5rem; font-weight: bold; background: linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; z-index: 2000; opacity: 0; transition: opacity 2s ease; pointer-events: none; }
         .confetti { position: fixed; width: 10px; height: 10px; background: #f59e0b; pointer-events: none; z-index: 999; }
         .confetti-bottom { position: fixed; bottom: 0; width: 100%; height: 60px; pointer-events: none; z-index: 998; }
     </style>
@@ -67,8 +67,6 @@
                 // Fade out after 2 seconds
                 setTimeout(() => {
                     vibeMessage.style.opacity = '0';
-                    // Keep confetti at bottom
-                    keepConfettiAtBottom();
                 }, 2000);
                 
                 // Reset counter
