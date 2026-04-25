@@ -17,6 +17,13 @@
         .card-title { font-size: 1.4rem; margin: 0; }
         .card-desc { margin: 0; color: #94a3b8; line-height: 1.65; }
         .footer { margin-top: 40px; color: #64748b; font-size: 0.95rem; }
+        .panda-king { position: fixed; bottom: 20px; right: 20px; cursor: pointer; font-size: 0.9rem; color: #94a3b8; transition: all 0.3s ease; z-index: 1001; }
+        .panda-king:hover { color: #f59e0b; transform: scale(1.05); }
+        .panda-king .panda-text { font-weight: bold; background: linear-gradient(45deg, #f59e0b, #ef4444, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .panda-king .panda-bg { display: inline-block; padding: 4px 8px; border-radius: 8px; background-color: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.3); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+        .vibe-message { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2rem; font-weight: bold; background: linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; z-index: 2000; opacity: 0; transition: opacity 2s ease; pointer-events: none; }
+        .confetti { position: fixed; width: 10px; height: 10px; background: #f59e0b; pointer-events: none; z-index: 999; }
+        .confetti-bottom { position: fixed; bottom: 0; width: 100%; height: 60px; pointer-events: none; z-index: 998; }
     </style>
 </head>
 <body>
@@ -38,6 +45,95 @@
             </a>
         </div>
         <p class="footer">Add new games by creating a new folder and a link here. Each game should include its own HTML, CSS, and JS file named after the project.</p>
+        <div class="panda-king" id="pandaKing">Made by the <span class="panda-bg"><span class="panda-text">PANDA KING</span></span></div>
+        <div class="vibe-message" id="vibeMessage">THE BEST VIBE PROGRAMMER EVER</div>
+        <div class="confetti-bottom" id="confettiBottom"></div>
     </main>
+    <script>
+        let clickCount = 0;
+        let confettiAtBottom = false;
+        
+        document.getElementById('pandaKing').addEventListener('click', function(e) {
+            clickCount++;
+            
+            // Create confetti burst
+            createConfetti(e.pageX, e.pageY);
+            
+            if (clickCount === 5) {
+                // Show the vibe message
+                const vibeMessage = document.getElementById('vibeMessage');
+                vibeMessage.style.opacity = '1';
+                
+                // Fade out after 2 seconds
+                setTimeout(() => {
+                    vibeMessage.style.opacity = '0';
+                    // Keep confetti at bottom
+                    keepConfettiAtBottom();
+                }, 2000);
+                
+                // Reset counter
+                clickCount = 0;
+            }
+        });
+        
+        function createConfetti(x, y) {
+            const colors = ['#f59e0b', '#ef4444', '#8b5cf6', '#10b981', '#3b82f6', '#ec4899'];
+            const confettiCount = 30;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = x + 'px';
+                confetti.style.top = y + 'px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                const angle = (Math.PI * 2 * i) / confettiCount;
+                const velocity = 5 + Math.random() * 5;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+                
+                document.body.appendChild(confetti);
+                
+                let posX = x;
+                let posY = y;
+                let velocityY = vy;
+                let gravity = 0.3;
+                
+                const animate = () => {
+                    posX += vx;
+                    velocityY += gravity;
+                    posY += velocityY;
+                    
+                    confetti.style.left = posX + 'px';
+                    confetti.style.top = posY + 'px';
+                    confetti.style.transform = `rotate(${posY * 2}deg)`;
+                    
+                    if (posY < window.innerHeight) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        confetti.remove();
+                    }
+                };
+                
+                requestAnimationFrame(animate);
+            }
+        }
+        
+        function keepConfettiAtBottom() {
+            confettiAtBottom = true;
+            const confettiBottom = document.getElementById('confettiBottom');
+            const colors = ['#f59e0b', '#ef4444', '#8b5cf6', '#10b981', '#3b82f6', '#ec4899'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.bottom = Math.random() * 60 + 'px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                confettiBottom.appendChild(confetti);
+            }
+        }
+    </script>
 </body>
 </html>
