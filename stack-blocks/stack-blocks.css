@@ -6,7 +6,6 @@
 
 body {
     font-family: 'Outfit', sans-serif;
-    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Igel.JPG/1280px-Igel.JPG') center/cover no-repeat fixed;
     min-height: 100vh;
     display: flex;
     flex-direction: column;

@@ -21,6 +21,7 @@
         .panda-king:hover { color: #f59e0b; transform: scale(1.05); }
         .panda-king .panda-text { font-weight: bold; background: linear-gradient(45deg, #f59e0b, #ef4444, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .panda-king .panda-bg { display: inline-block; padding: 4px 8px; border-radius: 8px; background-color: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.3); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+        .click-counter { position: fixed; bottom: 60px; right: 20px; font-size: 0.8rem; color: #64748b; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 6px; padding: 4px 8px; z-index: 1000; }
         .vibe-message { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); font-size: 1.5rem; font-weight: bold; background: linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; z-index: 2000; opacity: 0; transition: opacity 2s ease; pointer-events: none; }
         .confetti { position: fixed; width: 10px; height: 10px; background: #f59e0b; pointer-events: none; z-index: 999; }
         .confetti-bottom { position: fixed; bottom: 0; width: 100%; height: 60px; pointer-events: none; z-index: 998; }
@@ -45,21 +46,27 @@
             </a>
         </div>
         <p class="footer">Add new games by creating a new folder and a link here. Each game should include its own HTML, CSS, and JS file named after the project.</p>
+        <div class="click-counter" id="clickCounter">Panda clicks: 0</div>
         <div class="panda-king" id="pandaKing">Made by the <span class="panda-bg"><span class="panda-text">PANDA KING</span></span></div>
         <div class="vibe-message" id="vibeMessage">THE BEST VIBE PROGRAMMER EVER</div>
         <div class="confetti-bottom" id="confettiBottom"></div>
     </main>
     <script>
         let clickCount = 0;
+        let messageTrigger = 0;
         let confettiAtBottom = false;
         
         document.getElementById('pandaKing').addEventListener('click', function(e) {
             clickCount++;
+            messageTrigger++;
+            
+            // Update click counter display
+            document.getElementById('clickCounter').textContent = `Panda clicks: ${clickCount}`;
             
             // Create confetti burst
             createConfetti(e.pageX, e.pageY);
             
-            if (clickCount === 5) {
+            if (messageTrigger === 5) {
                 // Show the vibe message
                 const vibeMessage = document.getElementById('vibeMessage');
                 vibeMessage.style.opacity = '1';
@@ -69,8 +76,8 @@
                     vibeMessage.style.opacity = '0';
                 }, 2000);
                 
-                // Reset counter
-                clickCount = 0;
+                // Reset message trigger only
+                messageTrigger = 0;
             }
         });
         
