@@ -43,6 +43,7 @@
         .bg-option:hover { transform: scale(1.1); border-color: rgba(59, 130, 246, 0.5); }
         .bg-option.selected { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
         .vibe-message { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); font-size: 1.5rem; font-weight: bold; background: linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; z-index: 2000; opacity: 0; transition: opacity 2s ease; pointer-events: none; }
+        .why-message { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem; font-weight: bold; color: #ef4444; text-shadow: 0 0 20px rgba(239, 68, 68, 0.5); z-index: 3000; opacity: 0; transition: opacity 1s ease; pointer-events: none; }
         .confetti { position: fixed; width: 10px; height: 10px; background: #f59e0b; pointer-events: none; z-index: 999; }
         .confetti-bottom { position: fixed; bottom: 0; width: 100%; height: 60px; pointer-events: none; z-index: 998; }
     </style>
@@ -73,6 +74,7 @@
         <div class="click-counter" id="clickCounter">Panda clicks: 0</div>
         <div class="panda-king" id="pandaKing">Made by the <span class="panda-bg"><span class="panda-text">PANDA KING</span></span></div>
         <div class="vibe-message" id="vibeMessage">THE BEST VIBE PROGRAMMER EVER</div>
+        <div class="why-message" id="whyMessage">why?</div>
         <div class="confetti-bottom" id="confettiBottom"></div>
     </main>
     
@@ -147,6 +149,17 @@
                 
                 // Reset message trigger only
                 messageTrigger = 0;
+            }
+            
+            if (clickCount === 100) {
+                // Show the "why?" message at 100 clicks
+                const whyMessage = document.getElementById('whyMessage');
+                whyMessage.style.opacity = '1';
+                
+                // Fade out after 3 seconds
+                setTimeout(() => {
+                    whyMessage.style.opacity = '0';
+                }, 3000);
             }
         });
         
