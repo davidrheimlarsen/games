@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Match</title>
+    <link rel="stylesheet" href="memory-match.css">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <div class="header-top">
+                <a href="../index.html" class="back-btn">← Back to Games</a>
+                <h1>Memory Match</h1>
+            </div>
+            <div class="game-stats">
+                <div class="stat">
+                    <span class="stat-label">Moves:</span>
+                    <span id="moves" class="stat-value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Time:</span>
+                    <span id="timer" class="stat-value">00:00</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Best:</span>
+                    <span id="best" class="stat-value">--</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="game-main">
+            <div class="difficulty-selector">
+                <button class="difficulty-btn active" data-difficulty="easy">Easy (4x3)</button>
+                <button class="difficulty-btn" data-difficulty="medium">Medium (4x4)</button>
+                <button class="difficulty-btn" data-difficulty="hard">Hard (6x4)</button>
+            </div>
+
+            <div id="game-board" class="game-board"></div>
+
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">New Game</button>
+                <button id="hint-btn" class="btn btn-secondary">Hint (3)</button>
+            </div>
+        </main>
+
+        <div class="game-over-modal" id="gameOverModal">
+            <div class="modal-content">
+                <h2>🎉 Congratulations!</h2>
+                <p>You completed the game in <span id="final-moves">0</span> moves and <span id="final-time">00:00</span>!</p>
+                <div class="modal-buttons">
+                    <button id="play-again-btn" class="btn btn-primary">Play Again</button>
+                    <button id="change-difficulty-btn" class="btn btn-secondary">Change Difficulty</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="memory-match.js"></script>
+</body>
+</html>
