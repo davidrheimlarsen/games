@@ -15,6 +15,10 @@
             </div>
             <div class="game-stats">
                 <div class="stat">
+                    <span class="stat-label">Score:</span>
+                    <span id="score" class="stat-value">0</span>
+                </div>
+                <div class="stat">
                     <span class="stat-label">Moves:</span>
                     <span id="moves" class="stat-value">0</span>
                 </div>
@@ -27,6 +31,17 @@
                     <span id="best" class="stat-value">--</span>
                 </div>
             </div>
+            <div class="game-modes">
+                <button id="single-player-btn" class="mode-btn active" data-mode="single">Single Player</button>
+                <button id="multiplayer-btn" class="mode-btn" data-mode="multiplayer">Multiplayer</button>
+                <button id="tutorial-btn" class="mode-btn" data-mode="tutorial">Tutorial</button>
+            </div>
+            <div class="game-options">
+                <button id="themes-btn" class="btn btn-secondary">Themes</button>
+                <button id="stats-btn" class="btn btn-secondary">Statistics</button>
+                <button id="achievements-btn" class="btn btn-secondary">Achievements</button>
+                <button id="theme-toggle-btn" class="btn btn-secondary">🌙 Theme</button>
+            </div>
         </header>
 
         <main class="game-main">
@@ -36,7 +51,20 @@
                 <button class="difficulty-btn" data-difficulty="hard">Hard (6x4)</button>
             </div>
 
-            <div id="game-board" class="game-board"></div>
+            <div class="multiplayer-info" id="multiplayer-info" style="display: none;">
+            <div class="player-turns">
+                <div class="player-info active" id="player-1-info">
+                    <span class="player-name">Player 1</span>
+                    <span class="player-score">0</span>
+                </div>
+                <div class="player-info" id="player-2-info">
+                    <span class="player-name">Player 2</span>
+                    <span class="player-score">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-board" class="game-board"></div>
 
             <div class="game-controls">
                 <button id="new-game-btn" class="btn btn-primary">New Game</button>
@@ -47,10 +75,108 @@
         <div class="game-over-modal" id="gameOverModal">
             <div class="modal-content">
                 <h2>🎉 Congratulations!</h2>
-                <p>You completed the game in <span id="final-moves">0</span> moves and <span id="final-time">00:00</span>!</p>
+                <p id="game-over-message">You completed the game in <span id="final-moves">0</span> moves and <span id="final-time">00:00</span>!</p>
                 <div class="modal-buttons">
                     <button id="play-again-btn" class="btn btn-primary">Play Again</button>
                     <button id="change-difficulty-btn" class="btn btn-secondary">Change Difficulty</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="themes-modal" id="themesModal">
+            <div class="modal-content">
+                <h2>Choose Theme</h2>
+                <div class="theme-grid">
+                    <button class="theme-btn active" data-theme="emojis">🎮 Emojis</button>
+                    <button class="theme-btn" data-theme="numbers">🔢 Numbers</button>
+                    <button class="theme-btn" data-theme="letters">🔤 Letters</button>
+                    <button class="theme-btn" data-theme="animals">🐾 Animals</button>
+                </div>
+                <div class="custom-theme-section">
+                    <h3>Custom Theme</h3>
+                    <textarea id="custom-theme-input" placeholder="Enter custom items (one per line, at least 12 items needed)"></textarea>
+                    <button id="apply-custom-theme" class="btn btn-primary">Apply Custom Theme</button>
+                </div>
+                <div class="modal-buttons">
+                    <button id="close-themes-btn" class="btn btn-secondary">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-modal" id="statsModal">
+            <div class="modal-content">
+                <h2>Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Games Played:</span>
+                        <span id="total-games" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Best Score (Easy):</span>
+                        <span id="best-easy" class="stat-value">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Best Score (Medium):</span>
+                        <span id="best-medium" class="stat-value">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Best Score (Hard):</span>
+                        <span id="best-hard" class="stat-value">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Average Moves:</span>
+                        <span id="avg-moves" class="stat-value">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Play Time:</span>
+                        <span id="total-time" class="stat-value">00:00</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Highest Score:</span>
+                        <span id="high-score" class="stat-value">--</span>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button id="reset-stats-btn" class="btn btn-danger">Reset Stats</button>
+                    <button id="close-stats-btn" class="btn btn-secondary">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="achievements-modal" id="achievementsModal">
+            <div class="modal-content">
+                <h2>Achievements</h2>
+                <div class="achievements-grid" id="achievementsGrid">
+                    <!-- Achievements will be populated by JavaScript -->
+                </div>
+                <div class="modal-buttons">
+                    <button id="close-achievements-btn" class="btn btn-secondary">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-overlay" id="tutorialOverlay">
+            <div class="tutorial-content">
+                <h2>How to Play Memory Match</h2>
+                <div class="tutorial-step" id="tutorial-step-1">
+                    <h3>Step 1: Choose Your Mode</h3>
+                    <p>Select Single Player to practice, or Multiplayer to compete with a friend!</p>
+                    <button class="tutorial-next" data-step="2">Next</button>
+                </div>
+                <div class="tutorial-step" id="tutorial-step-2" style="display: none;">
+                    <h3>Step 2: Select Difficulty</h3>
+                    <p>Easy (4x3), Medium (4x4), or Hard (6x4). Start with Easy if you're new!</p>
+                    <button class="tutorial-next" data-step="3">Next</button>
+                </div>
+                <div class="tutorial-step" id="tutorial-step-3" style="display: none;">
+                    <h3>Step 3: Match the Cards</h3>
+                    <p>Click cards to flip them. Find matching pairs by remembering card positions.</p>
+                    <button class="tutorial-next" data-step="4">Next</button>
+                </div>
+                <div class="tutorial-step" id="tutorial-step-4" style="display: none;">
+                    <h3>Step 4: Use Hints</h3>
+                    <p>Stuck? Use the Hint button to highlight a matching pair. You get 3 hints per game!</p>
+                    <button class="tutorial-start">Start Playing!</button>
                 </div>
             </div>
         </div>
