@@ -1,361 +1,738 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Games Home</title>
+
     <style>
+
         :root { color-scheme: dark; }
+
         * { box-sizing: border-box; }
+
         body { margin: 0; font-family: "Inter", system-ui, sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at top, #3b82f6 0%, #0f172a 45%, #020617 100%); color: #ffffff; transition: background 0.5s ease; }
+
         body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); pointer-events: none; z-index: 1; }
+
         .page { max-width: 980px; width: 100%; padding: 32px; position: relative; z-index: 2; }
+
         h1 { margin: 0 0 16px; font-size: clamp(2.2rem, 4vw, 3.75rem); letter-spacing: -0.04em; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); }
+
         p { margin: 0 0 24px; color: #ffffff; font-size: 1rem; max-width: 720px; line-height: 1.7; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); }
+
         .cards { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
         .card { display: flex; flex-direction: column; gap: 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(148, 163, 184, 0.12); border-radius: 24px; padding: 24px; text-decoration: none; color: inherit; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+
         .card:hover { transform: translateY(-4px); border-color: rgba(59, 130, 246, 0.45); box-shadow: 0 20px 50px rgba(15, 23, 42, 0.35); }
+
         .card-title { font-size: 1.4rem; margin: 0; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); }
+
         .card-desc { margin: 0; color: #ffffff; line-height: 1.65; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); }
+
         .footer { margin-top: 40px; color: #ffffff; font-size: 0.95rem; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); }
+
         .panda-king { position: fixed; bottom: 20px; right: 20px; cursor: pointer; font-size: 0.9rem; color: #94a3b8; transition: all 0.3s ease; z-index: 1001; }
+
         .panda-king:hover { color: #f59e0b; transform: scale(1.05); }
+
         .panda-king .panda-text { font-weight: bold; background: linear-gradient(45deg, #f59e0b, #ef4444, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
         .panda-king .panda-bg { display: inline-block; padding: 4px 8px; border-radius: 8px; background-color: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.3); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+
         .click-counter { position: fixed; bottom: 60px; right: 20px; font-size: 0.8rem; color: #64748b; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 6px; padding: 4px 8px; z-index: 1000; }
+
         .shopping-cart { position: fixed; bottom: 90px; right: 20px; font-size: 0.8rem; color: #64748b; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 6px; padding: 4px 8px; z-index: 1000; cursor: pointer; transition: all 0.3s ease; }
+
         .shopping-cart:hover { color: #f59e0b; border-color: rgba(245, 158, 11, 0.4); transform: scale(1.05); }
+
         .cart-icon { display: inline-block; margin-right: 4px; }
+
         .checkout-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 16px; padding: 24px; z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; min-width: 300px; }
+
         .checkout-modal.active { opacity: 1; pointer-events: auto; }
+
         .checkout-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 16px; color: #e2e8f0; }
+
         .checkout-item { display: flex; justify-content: space-between; margin-bottom: 8px; color: #94a3b8; }
+
         .checkout-total { border-top: 1px solid rgba(59, 130, 246, 0.3); padding-top: 8px; margin-top: 12px; font-weight: bold; color: #e2e8f0; }
+
         .checkout-buttons { display: flex; gap: 12px; margin-top: 20px; }
+
         .checkout-btn { flex: 1; padding: 8px 16px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+
         .checkout-btn.pay { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; }
+
         .checkout-btn.pay:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+
         .checkout-btn.cancel { background: rgba(148, 163, 184, 0.2); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); }
+
         .checkout-btn.cancel:hover { background: rgba(148, 163, 184, 0.3); }
+
         .checkout-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
         .background-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; }
+
         .bg-option { width: 60px; height: 60px; border-radius: 12px; cursor: pointer; border: 2px solid transparent; transition: all 0.3s ease; }
+
         .bg-option:hover { transform: scale(1.1); border-color: rgba(59, 130, 246, 0.5); }
+
         .bg-option.selected { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+
         .vibe-message { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); font-size: 1.5rem; font-weight: bold; background: linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; z-index: 2000; opacity: 0; transition: opacity 2s ease; pointer-events: none; }
+
         .why-message { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem; font-weight: bold; color: #ef4444; text-shadow: 0 0 20px rgba(239, 68, 68, 0.5); z-index: 3000; opacity: 0; transition: opacity 1s ease; pointer-events: none; }
+
         .confetti { position: fixed; width: 10px; height: 10px; background: #f59e0b; pointer-events: none; z-index: 999; }
+
         .confetti-bottom { position: fixed; bottom: 0; width: 100%; height: 60px; pointer-events: none; z-index: 998; }
+
     </style>
+
 </head>
+
 <body>
+
     <main class="page">
+
         <h1>My Games</h1>
+
         <p>Welcome to the games collection. Click a card to open a project. Each game is self-contained in its own folder so it can be hosted on GitHub Pages easily.</p>
+
         <div class="cards">
+
             <a class="card" href="stack-blocks/stack-blocks.html">
+
                 <div class="card-title">Stack Blocks</div>
+
                 <div class="card-desc">A polished stacking arcade game with colorful block physics, score tracking, difficulty settings, and replay support.</div>
+
             </a>
+
             <a class="card" href="survival/survival.html">
+
                 <div class="card-title">Survival</div>
+
                 <div class="card-desc">A survival roguelike mini-game with configurable player, monsters, day cycles, and resource management.</div>
+
             </a>
+
             <a class="card" href="endless-runner/endless-runner.html">
+
                 <div class="card-title">Endless Runner</div>
+
                 <div class="card-desc">A fast-paced side-scrolling endless runner with jumping mechanics, obstacles, increasing speed, and particle effects.</div>
+
             </a>
+
             <a class="card" href="memory-match/memory-match.html">
+
                 <div class="card-title">Memory Match</div>
+
                 <div class="card-desc">A classic memory card matching game with flip animations, multiple difficulty levels, hints, and score tracking.</div>
+
             </a>
+
+            <a class="card" href="snake-game/snake-game.html">
+
+                <div class="card-title">Snake Classic</div>
+
+                <div class="card-desc">A modern take on the classic Snake game with smooth animations, multiple game modes, power-ups, and high score tracking.</div>
+
+            </a>
+
+            <a class="card" href="space-shooter/space-shooter.html">
+
+                <div class="card-title">Space Shooter</div>
+
+                <div class="card-desc">An action-packed top-down space shooter with wave-based enemies, power-ups, boss battles, and spectacular particle effects.</div>
+
+            </a>
+
         </div>
+
         <p class="footer">Add new games by creating a new folder and a link here. Each game should include its own HTML, CSS, and JS file named after the project.</p>
+
         <div class="shopping-cart" id="shoppingCart">
+
             <span class="cart-icon">🛒</span>
+
             <span id="cartTotal">$0.00</span>
+
         </div>
+
         <div class="click-counter" id="clickCounter">Panda clicks: 0</div>
+
         <div class="panda-king" id="pandaKing">Made by the <span class="panda-bg"><span class="panda-text">PANDA KING</span></span></div>
+
         <div class="vibe-message" id="vibeMessage">THE BEST VIBE PROGRAMMER EVER</div>
+
         <div class="why-message" id="whyMessage">why?</div>
+
         <div class="confetti-bottom" id="confettiBottom"></div>
+
     </main>
+
     
+
     <div class="checkout-modal" id="checkoutModal">
+
         <div class="checkout-title">🎨 Background Customization</div>
+
         <div class="checkout-item">
+
             <span>Required clicks:</span>
+
             <span>10</span>
+
         </div>
+
         <div class="checkout-item">
+
             <span>Your clicks:</span>
+
             <span id="checkoutClicks">0</span>
+
         </div>
+
         <div class="checkout-item">
+
             <span>Status:</span>
+
             <span id="unlockStatus">Need 10 clicks</span>
+
         </div>
+
         <div class="checkout-buttons">
+
             <button class="checkout-btn pay" id="unlockBtn" disabled>Unlock Background</button>
+
             <button class="checkout-btn cancel" id="cancelBtn">Cancel</button>
+
         </div>
+
     </div>
+
     
+
     <div class="checkout-modal" id="backgroundModal">
+
         <div class="checkout-title">🎨 Choose Background</div>
+
         <div class="background-options" id="backgroundOptions">
+
             <div class="bg-option" data-bg="gradient1" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+
             <div class="bg-option" data-bg="gradient2" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+
             <div class="bg-option" data-bg="gradient3" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+
             <div class="bg-option" data-bg="gradient4" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></div>
+
             <div class="bg-option" data-bg="gradient5" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+
             <div class="bg-option" data-bg="gradient6" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);"></div>
+
         </div>
+
         <div class="checkout-buttons">
+
             <button class="checkout-btn cancel" id="closeBgBtn">Close</button>
+
         </div>
+
     </div>
+
     <script>
+
         let clickCount = 0;
+
         let messageTrigger = 0;
+
         let confettiAtBottom = false;
+
         const PRICE_PER_CLICK = 1.00;
+
         
+
         // Load saved background and click count on page load
+
         function loadSavedData() {
+
             // Load saved background
+
             const savedBackground = localStorage.getItem('selectedBackground');
+
             if (savedBackground) {
+
                 const gradients = {
+
                     gradient1: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+
                     gradient2: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+
                     gradient3: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+
                     gradient4: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+
                     gradient5: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+
                     gradient6: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)'
+
                 };
+
                 
+
                 document.body.style.background = gradients[savedBackground];
+
                 
+
                 // Update selected state in background options
+
                 document.querySelectorAll('.bg-option').forEach(opt => {
+
                     opt.classList.remove('selected');
+
                     if (opt.dataset.bg === savedBackground) {
+
                         opt.classList.add('selected');
+
                     }
+
                 });
+
             }
+
             
+
             // Load saved click count
+
             const savedClickCount = localStorage.getItem('clickCount');
+
             if (savedClickCount) {
+
                 clickCount = parseInt(savedClickCount);
+
                 document.getElementById('clickCounter').textContent = `Panda clicks: ${clickCount}`;
+
                 updateCartTotal();
+
             }
+
         }
+
         
+
         // Initialize on page load
+
         loadSavedData();
+
         
+
         document.getElementById('pandaKing').addEventListener('click', function(e) {
+
             clickCount++;
+
             messageTrigger++;
+
             
+
             // Save click count to localStorage
+
             localStorage.setItem('clickCount', clickCount);
+
             
+
             // Update click counter display
+
             document.getElementById('clickCounter').textContent = `Panda clicks: ${clickCount}`;
+
             
+
             // Update cart total
+
             updateCartTotal();
+
             
+
             // Update unlock status if modal is open
+
             if (document.getElementById('checkoutModal').classList.contains('active')) {
+
                 updateUnlockStatus();
+
                 document.getElementById('checkoutClicks').textContent = clickCount;
+
             }
+
             
+
             // Create confetti burst
+
             createConfetti(e.pageX, e.pageY);
+
             
+
             if (messageTrigger === 5) {
+
                 // Show the vibe message
+
                 const vibeMessage = document.getElementById('vibeMessage');
+
                 vibeMessage.style.opacity = '1';
+
                 
+
                 // Fade out after 2 seconds
+
                 setTimeout(() => {
+
                     vibeMessage.style.opacity = '0';
+
                 }, 2000);
+
                 
+
                 // Reset message trigger only
+
                 messageTrigger = 0;
+
             }
+
             
+
             if (clickCount === 100) {
+
                 // Show the "why?" message at 100 clicks
+
                 const whyMessage = document.getElementById('whyMessage');
+
                 whyMessage.style.opacity = '1';
+
                 
+
                 // Fade out after 3 seconds
+
                 setTimeout(() => {
+
                     whyMessage.style.opacity = '0';
+
                 }, 3000);
+
             }
+
         });
+
         
+
         function createConfetti(x, y) {
+
             const colors = ['#f59e0b', '#ef4444', '#8b5cf6', '#10b981', '#3b82f6', '#ec4899'];
+
             const confettiCount = 30;
+
             
+
             for (let i = 0; i < confettiCount; i++) {
+
                 const confetti = document.createElement('div');
+
                 confetti.className = 'confetti';
+
                 confetti.style.left = x + 'px';
+
                 confetti.style.top = y + 'px';
+
                 confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+
                 
+
                 const angle = (Math.PI * 2 * i) / confettiCount;
+
                 const velocity = 5 + Math.random() * 5;
+
                 const vx = Math.cos(angle) * velocity;
+
                 const vy = Math.sin(angle) * velocity;
+
                 
+
                 document.body.appendChild(confetti);
+
                 
+
                 let posX = x;
+
                 let posY = y;
+
                 let velocityY = vy;
+
                 let gravity = 0.3;
+
                 
+
                 const animate = () => {
+
                     posX += vx;
+
                     velocityY += gravity;
+
                     posY += velocityY;
+
                     
+
                     confetti.style.left = posX + 'px';
+
                     confetti.style.top = posY + 'px';
+
                     confetti.style.transform = `rotate(${posY * 2}deg)`;
+
                     
+
                     if (posY < window.innerHeight) {
+
                         requestAnimationFrame(animate);
+
                     } else {
+
                         confetti.remove();
+
                     }
+
                 };
+
                 
+
                 requestAnimationFrame(animate);
+
             }
+
         }
+
         
+
         function updateCartTotal() {
+
             const total = clickCount * PRICE_PER_CLICK;
+
             document.getElementById('cartTotal').textContent = `$${total.toFixed(2)}`;
+
         }
+
         
+
         function updateUnlockStatus() {
+
             const unlockBtn = document.getElementById('unlockBtn');
+
             const unlockStatus = document.getElementById('unlockStatus');
+
             
+
             if (clickCount >= 10) {
+
                 unlockBtn.disabled = false;
+
                 unlockStatus.textContent = 'Ready to unlock!';
+
                 unlockStatus.style.color = '#10b981';
+
             } else {
+
                 unlockBtn.disabled = true;
+
                 unlockStatus.textContent = `Need ${10 - clickCount} more clicks`;
+
                 unlockStatus.style.color = '#94a3b8';
+
             }
+
         }
+
         
+
         // Shopping cart click handler
+
         document.getElementById('shoppingCart').addEventListener('click', function() {
+
             const modal = document.getElementById('checkoutModal');
+
             document.getElementById('checkoutClicks').textContent = clickCount;
+
             updateUnlockStatus();
+
             modal.classList.add('active');
+
         });
+
         
+
         // Unlock button handler
+
         document.getElementById('unlockBtn').addEventListener('click', function() {
+
             if (clickCount >= 10) {
+
                 // Create celebration confetti
+
                 for (let i = 0; i < 5; i++) {
+
                     setTimeout(() => {
+
                         createConfetti(window.innerWidth / 2, window.innerHeight / 2);
+
                     }, i * 100);
+
                 }
+
                 
+
                 // Deduct 10 clicks and show background modal
+
                 setTimeout(() => {
+
                     clickCount -= 10;
+
                     localStorage.setItem('clickCount', clickCount);
+
                     document.getElementById('clickCounter').textContent = `Panda clicks: ${clickCount}`;
+
                     updateCartTotal();
+
                     document.getElementById('checkoutModal').classList.remove('active');
+
                     document.getElementById('backgroundModal').classList.add('active');
+
                 }, 1000);
+
             }
+
         });
+
         
+
         // Cancel button handler
+
         document.getElementById('cancelBtn').addEventListener('click', function() {
+
             document.getElementById('checkoutModal').classList.remove('active');
+
         });
+
         
+
         // Background modal close button handler
+
         document.getElementById('closeBgBtn').addEventListener('click', function() {
+
             document.getElementById('backgroundModal').classList.remove('active');
+
         });
+
         
+
         // Background option click handlers
+
         document.querySelectorAll('.bg-option').forEach(option => {
+
             option.addEventListener('click', function() {
+
                 const bgClass = this.dataset.bg;
+
                 
+
                 // Remove previous selection
+
                 document.querySelectorAll('.bg-option').forEach(opt => opt.classList.remove('selected'));
+
                 this.classList.add('selected');
+
                 
+
                 // Apply background to body
+
                 const gradients = {
+
                     gradient1: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+
                     gradient2: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+
                     gradient3: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+
                     gradient4: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+
                     gradient5: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+
                     gradient6: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)'
+
                 };
+
                 
+
                 document.body.style.background = gradients[bgClass];
+
                 
+
                 // Save selected background to localStorage
+
                 localStorage.setItem('selectedBackground', bgClass);
+
                 
+
                 // Close modal after selection
+
                 setTimeout(() => {
+
                     document.getElementById('backgroundModal').classList.remove('active');
+
                 }, 500);
+
             });
+
         });
+
         
+
         function keepConfettiAtBottom() {
+
             confettiAtBottom = true;
+
             const confettiBottom = document.getElementById('confettiBottom');
+
             const colors = ['#f59e0b', '#ef4444', '#8b5cf6', '#10b981', '#3b82f6', '#ec4899'];
+
             
+
             for (let i = 0; i < 50; i++) {
+
                 const confetti = document.createElement('div');
+
                 confetti.className = 'confetti';
+
                 confetti.style.left = Math.random() * window.innerWidth + 'px';
+
                 confetti.style.bottom = Math.random() * 60 + 'px';
+
                 confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+
                 confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+
                 confettiBottom.appendChild(confetti);
+
             }
+
         }
+
     </script>
+
 </body>
+
 </html>
+

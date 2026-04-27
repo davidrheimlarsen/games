@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Classic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="snake-game.css">
+</head>
+<body>
+    <nav class="page-nav"><a href="../index.html">← Home</a></nav>
+    <div class="game-container">
+        <div class="score-display">
+            <span class="score-label">Score</span>
+            <span class="score-value" id="score">0</span>
+            <span class="best-score" id="best-score">Best: 0</span>
+            <span class="high-score" id="high-score">High Score: 0</span>
+        </div>
+        
+        <canvas id="game-canvas" width="600" height="600"></canvas>
+        
+        <p class="instructions" id="instructions">Use Arrow Keys or WASD to Move</p>
+        
+        <div class="game-stats" id="game-stats">
+            <span class="timer" id="timer">Time: 0:00</span>
+            <span class="speed" id="speed">Speed: 1.0x</span>
+            <span class="length" id="length">Length: 3</span>
+        </div>
+    </div>
+
+    <div class="overlay" id="game-over-overlay">
+        <div class="game-over-modal">
+            <h2 class="game-over-title">Game Over</h2>
+            <div class="final-score" id="final-score">0</div>
+            <p class="final-score-label">Final Score</p>
+            <p class="reason" id="game-over-reason">Hit the wall!</p>
+            <p class="new-best" id="new-best">🏆 New Best!</p>
+            <button class="play-again-btn" id="play-again-btn">Play Again</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="pause-overlay">
+        <div class="pause-modal">
+            <h2 class="pause-title">Game Paused</h2>
+            <p class="pause-instructions">Press ESC or P to Resume</p>
+            <button class="resume-btn" id="resume-btn">Resume</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="start-overlay">
+        <div class="start-modal">
+            <h2 class="start-title">Snake Classic</h2>
+            <p class="start-instructions">Use Arrow Keys or WASD to Move</p>
+            <p class="start-instructions">Press ESC or P to Pause</p>
+            
+            <div class="game-modes">
+                <span class="mode-label">Select Game Mode:</span>
+                <div class="mode-buttons">
+                    <button class="mode-btn selected" data-mode="classic">Classic</button>
+                    <button class="mode-btn" data-mode="timed">Timed</button>
+                    <button class="mode-btn" data-mode="survival">Survival</button>
+                </div>
+            </div>
+            
+            <button class="start-btn" id="start-btn">Start Game</button>
+        </div>
+    </div>
+
+    <script src="snake-game.js" defer></script>
+</body>
+</html>
