@@ -22,6 +22,7 @@ class TowerDefenseGame {
         this.gameLoop = null;
         this.path = [];
         this.bestScores = {}; // Fallback for localStorage issues
+        this.previewRangeElement = null;
         
         this.towerTypes = {
             basic: {
@@ -158,6 +159,8 @@ class TowerDefenseGame {
                 }
                 
                 cell.addEventListener('click', (e) => this.handleCellClick(x, y));
+                cell.addEventListener('mouseenter', (e) => this.handleCellHover(x, y));
+                cell.addEventListener('mouseleave', (e) => this.handleCellLeave(x, y));
                 gameBoard.appendChild(cell);
                 this.grid[y][x] = { element: cell, occupied: false, tower: null };
             }
@@ -228,6 +231,7 @@ class TowerDefenseGame {
         this.gameMode = mode;
         if (mode !== 'place') {
             this.selectedTowerType = null;
+            this.hideRangePreview();
         }
         
         // Update UI
@@ -247,6 +251,49 @@ class TowerDefenseGame {
                 cell.classList.add('upgrade-mode');
             }
         });
+    }
+    
+    handleCellHover(x, y) {
+        if (this.gameState !== 'playing' || this.gameMode !== 'place' || !this.selectedTowerType) return;
+        
+        const cell = this.grid[y][x];
+        if (cell.occupied || this.path.some(p => p.x === x && p.y === y)) return;
+        
+        this.showRangePreview(x, y, this.selectedTowerType);
+    }
+    
+    handleCellLeave(x, y) {
+        this.hideRangePreview();
+    }
+    
+    showRangePreview(x, y, towerType) {
+        this.hideRangePreview();
+        
+        const tower = this.towerTypes[towerType];
+        const preview = document.createElement('div');
+        preview.className = `range-indicator ${towerType} preview`;
+        
+        // Calculate size and position
+        const diameter = tower.range * 2;
+        const centerX = x * this.cellSize + this.cellSize / 2;
+        const centerY = y * this.cellSize + this.cellSize / 2;
+        
+        preview.style.width = `${diameter}px`;
+        preview.style.height = `${diameter}px`;
+        preview.style.left = `${centerX - tower.range}px`;
+        preview.style.top = `${centerY - tower.range}px`;
+        preview.style.position = 'absolute';
+        
+        const gameBoard = document.getElementById('gameBoard');
+        gameBoard.appendChild(preview);
+        this.previewRangeElement = preview;
+    }
+    
+    hideRangePreview() {
+        if (this.previewRangeElement) {
+            this.previewRangeElement.remove();
+            this.previewRangeElement = null;
+        }
     }
     
     handleCellClick(x, y) {
@@ -290,12 +337,34 @@ class TowerDefenseGame {
         cell.element.appendChild(towerElement);
         cell.element.classList.add('occupied');
         
+        // Create range indicator
+        this.createRangeIndicator(towerObj, cell.element);
+        
         // Deduct gold
         this.gold -= tower.cost;
         this.updateUI();
         
         // Reset selection
         this.setGameMode('place');
+        this.hideRangePreview();
+    }
+    
+    createRangeIndicator(tower, cellElement) {
+        const rangeIndicator = document.createElement('div');
+        rangeIndicator.className = `range-indicator ${tower.type}`;
+        
+        // Calculate size and position
+        const diameter = tower.range * 2;
+        const centerX = this.cellSize / 2;
+        const centerY = this.cellSize / 2;
+        
+        rangeIndicator.style.width = `${diameter}px`;
+        rangeIndicator.style.height = `${diameter}px`;
+        rangeIndicator.style.left = `${centerX - tower.range}px`;
+        rangeIndicator.style.top = `${centerY - tower.range}px`;
+        
+        cellElement.appendChild(rangeIndicator);
+        tower.rangeElement = rangeIndicator;
     }
     
     sellTower(x, y) {
@@ -330,6 +399,18 @@ class TowerDefenseGame {
         tower.damage = Math.floor(tower.damage * 1.5);
         tower.range = Math.floor(tower.range * 1.2);
         tower.fireRate = Math.floor(tower.fireRate * 0.9);
+        
+        // Update range indicator
+        if (tower.rangeElement) {
+            const diameter = tower.range * 2;
+            const centerX = this.cellSize / 2;
+            const centerY = this.cellSize / 2;
+            
+            tower.rangeElement.style.width = `${diameter}px`;
+            tower.rangeElement.style.height = `${diameter}px`;
+            tower.rangeElement.style.left = `${centerX - tower.range}px`;
+            tower.rangeElement.style.top = `${centerY - tower.range}px`;
+        }
         
         // Update visual
         const towerElement = cell.element.querySelector('.tower');
@@ -704,8 +785,14 @@ class TowerDefenseGame {
     }
     
     getDistance(obj1, obj2) {
-        const dx = obj1.x - obj2.x;
-        const dy = obj1.y - obj2.y;
+        // Convert tower grid coordinates to pixel coordinates if needed
+        const x1 = obj1.x < this.gridWidth ? obj1.x * this.cellSize + this.cellSize / 2 : obj1.x;
+        const y1 = obj1.y < this.gridHeight ? obj1.y * this.cellSize + this.cellSize / 2 : obj1.y;
+        const x2 = obj2.x < this.gridWidth ? obj2.x * this.cellSize + this.cellSize / 2 : obj2.x;
+        const y2 = obj2.y < this.gridHeight ? obj2.y * this.cellSize + this.cellSize / 2 : obj2.y;
+        
+        const dx = x1 - x2;
+        const dy = y1 - y2;
         return Math.sqrt(dx * dx + dy * dy);
     }
     

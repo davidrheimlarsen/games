@@ -309,12 +309,48 @@ body {
     color: #06b6d4;
 }
 
-.tower.range-indicator {
+.range-indicator {
     position: absolute;
-    border: 2px dashed rgba(59, 130, 246, 0.3);
     border-radius: 50%;
     pointer-events: none;
     z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.range-indicator.basic {
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.05) 70%, transparent 100%);
+    border: 2px dashed rgba(59, 130, 246, 0.4);
+}
+
+.range-indicator.sniper {
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.05) 70%, transparent 100%);
+    border: 2px dashed rgba(139, 92, 246, 0.4);
+}
+
+.range-indicator.rapid {
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 70%, transparent 100%);
+    border: 2px dashed rgba(245, 158, 11, 0.4);
+}
+
+.range-indicator.freeze {
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, rgba(6, 182, 212, 0.05) 70%, transparent 100%);
+    border: 2px dashed rgba(6, 182, 212, 0.4);
+}
+
+.range-indicator.preview {
+    opacity: 0.7;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
 }
 
 .enemy {
