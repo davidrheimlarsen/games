@@ -68,6 +68,9 @@ body {
     border-radius: 12px;
     padding: 16px 24px;
     backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .score-display {
@@ -93,6 +96,65 @@ body {
 
 .gold-display {
     color: var(--warning-color);
+}
+
+.speed-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.speed-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.speed-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.speed-btn {
+    padding: 6px 10px;
+    border: 1px solid var(--border-color);
+    background: rgba(148, 163, 184, 0.2);
+    color: var(--text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.speed-btn:hover {
+    background: rgba(148, 163, 184, 0.3);
+    color: var(--text-primary);
+}
+
+.speed-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.achievements-btn {
+    background: rgba(148, 163, 184, 0.2);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    font-family: inherit;
+}
+
+.achievements-btn:hover {
+    background: rgba(255, 215, 0, 0.2);
+    border-color: gold;
+    color: gold;
+    transform: translateY(-2px);
 }
 
 .game-board-container {
@@ -619,6 +681,186 @@ body {
     }
 }
 
+.achievements-modal {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    backdrop-filter: blur(10px);
+}
+
+.achievements-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    text-align: center;
+    background: linear-gradient(135deg, gold, orange);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.achievement-card {
+    background: rgba(30, 41, 59, 0.5);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+
+.achievement-card.unlocked {
+    background: rgba(255, 215, 0, 0.1);
+    border-color: gold;
+}
+
+.achievement-card.locked {
+    opacity: 0.6;
+}
+
+.achievement-card:hover {
+    transform: translateY(-2px);
+}
+
+.achievement-card .achievement-icon {
+    font-size: 2rem;
+    width: 50px;
+    text-align: center;
+}
+
+.achievement-card .achievement-info {
+    flex: 1;
+}
+
+.achievement-card .achievement-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.achievement-card .achievement-description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.achievement-card .achievement-status {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.achievement-card.unlocked .achievement-status {
+    color: var(--success-color);
+}
+
+.achievement-card.locked .achievement-status {
+    color: var(--text-secondary);
+}
+
+.achievements-stats {
+    background: rgba(30, 41, 59, 0.3);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    display: block;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.close-achievements-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    display: block;
+    margin: 0 auto;
+}
+
+.close-achievements-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.achievement-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, gold, orange);
+    border: 2px solid gold;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 3000;
+    transform: translateX(400px);
+    transition: transform 0.5s ease;
+    max-width: 350px;
+    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.3);
+}
+
+.achievement-notification.show {
+    transform: translateX(0);
+}
+
+.achievement-notification .achievement-icon {
+    font-size: 2rem;
+}
+
+.achievement-notification .achievement-info {
+    flex: 1;
+}
+
+.achievement-notification .achievement-title {
+    font-weight: 700;
+    color: var(--dark-bg);
+    margin-bottom: 4px;
+}
+
+.achievement-notification .achievement-name {
+    font-weight: 600;
+    color: var(--dark-bg);
+    margin-bottom: 2px;
+}
+
+.achievement-notification .achievement-desc {
+    color: rgba(15, 23, 42, 0.8);
+    font-size: 0.9rem;
+}
+
 @media (max-width: 1200px) {
     .game-board-container {
         flex-direction: column;
@@ -648,6 +890,15 @@ body {
         flex-wrap: wrap;
         gap: 12px;
         font-size: 0.9rem;
+    }
+    
+    .game-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .speed-control {
+        align-self: flex-end;
     }
     
     .tower-panel {

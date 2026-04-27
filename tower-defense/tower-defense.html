@@ -16,6 +16,17 @@
                 <span class="health-display">❤️ <span id="health">20</span></span>
                 <span class="gold-display">💰 <span id="gold">100</span></span>
                 <span class="score-display">Score: <span id="score">0</span></span>
+                <button class="achievements-btn" id="achievements-btn">🏆</button>
+            </div>
+            <div class="speed-control">
+                <span class="speed-label">Speed:</span>
+                <div class="speed-buttons">
+                    <button class="speed-btn" data-speed="0">0x</button>
+                    <button class="speed-btn" data-speed="0.5">0.5x</button>
+                    <button class="speed-btn active" data-speed="1">1x</button>
+                    <button class="speed-btn" data-speed="1.5">1.5x</button>
+                    <button class="speed-btn" data-speed="2">2x</button>
+                </div>
             </div>
         </div>
         
@@ -92,6 +103,30 @@
             <h2 class="pause-title">Game Paused</h2>
             <p class="pause-instructions">Press ESC or P to Resume</p>
             <button class="resume-btn" id="resume-btn">Resume</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="achievements-overlay">
+        <div class="achievements-modal">
+            <h2 class="achievements-title">🏆 Achievements</h2>
+            <div class="achievements-grid" id="achievements-grid">
+                <!-- Achievements will be populated by JavaScript -->
+            </div>
+            <div class="achievements-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Unlocked:</span>
+                    <span class="stat-value" id="unlocked-count">0/12</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Enemies Defeated:</span>
+                    <span class="stat-value" id="enemies-defeated">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Towers Placed:</span>
+                    <span class="stat-value" id="towers-placed">0</span>
+                </div>
+            </div>
+            <button class="close-achievements-btn" id="close-achievements-btn">Close</button>
         </div>
     </div>
 

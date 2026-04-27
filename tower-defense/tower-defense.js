@@ -12,8 +12,8 @@ class TowerDefenseGame {
         this.gameMode = 'place'; // place, sell, upgrade
         this.gameState = 'menu'; // menu, playing, paused, gameover
         this.wave = 0;
-        this.health = 20;
-        this.gold = 100;
+        this.health = 25;
+        this.gold = 150;
         this.score = 0;
         this.difficulty = 'medium';
         this.waveInProgress = false;
@@ -23,6 +23,36 @@ class TowerDefenseGame {
         this.path = [];
         this.bestScores = {}; // Fallback for localStorage issues
         this.previewRangeElement = null;
+        this.gameSpeed = 1; // Default game speed
+        
+        // Achievements system
+        this.achievements = {
+            firstBlood: { id: 'firstBlood', name: 'First Blood', description: 'Defeat your first enemy', icon: '🩸', unlocked: false },
+            towerMaster: { id: 'towerMaster', name: 'Tower Master', description: 'Place 10 towers', icon: '🏰', unlocked: false },
+            waveSurvivor: { id: 'waveSurvivor', name: 'Wave Survivor', description: 'Survive 5 waves', icon: '🌊', unlocked: false },
+            richKing: { id: 'richKing', name: 'Rich King', description: 'Accumulate 500 gold', icon: '👑', unlocked: false },
+            speedDemon: { id: 'speedDemon', name: 'Speed Demon', description: 'Complete a wave at 2x speed', icon: '⚡', unlocked: false },
+            perfectDefense: { id: 'perfectDefense', name: 'Perfect Defense', description: 'Complete a wave without losing health', icon: '🛡️', unlocked: false },
+            sniperElite: { id: 'sniperElite', name: 'Sniper Elite', description: 'Kill 50 enemies with sniper towers', icon: '🎯', unlocked: false },
+            freezeChampion: { id: 'freezeChampion', name: 'Freeze Champion', description: 'Kill 30 enemies with freeze towers', icon: '❄️', unlocked: false },
+            rapidFire: { id: 'rapidFire', name: 'Rapid Fire', description: 'Kill 100 enemies with rapid towers', icon: '🔥', unlocked: false },
+            veteran: { id: 'veteran', name: 'Veteran', description: 'Survive 10 waves', icon: '⭐', unlocked: false },
+            legend: { id: 'legend', name: 'Legend', description: 'Survive 20 waves', icon: '🏆', unlocked: false },
+            strategist: { id: 'strategist', name: 'Strategist', description: 'Use 0x speed for 30 seconds', icon: '🧠', unlocked: false }
+        };
+        this.achievementStats = {
+            enemiesKilled: 0,
+            towersPlaced: 0,
+            wavesCompleted: 0,
+            goldEarned: 0,
+            sniperKills: 0,
+            freezeKills: 0,
+            rapidKills: 0,
+            speedModeTime: 0,
+            lastSpeedChange: Date.now(),
+            perfectWaves: 0
+        };
+        this.unlockedAchievements = [];
         
         this.towerTypes = {
             basic: {
@@ -71,26 +101,26 @@ class TowerDefenseGame {
         
         this.enemyTypes = {
             basic: {
-                health: 50,
+                health: 35,
                 speed: 2,
-                reward: 10,
+                reward: 15,
                 damage: 1,
                 icon: '👾',
                 color: '#ef4444'
             },
             fast: {
-                health: 30,
+                health: 20,
                 speed: 4,
-                reward: 15,
+                reward: 20,
                 damage: 1,
                 icon: '🏃',
                 color: '#f59e0b'
             },
             tank: {
-                health: 150,
+                health: 100,
                 speed: 1,
-                reward: 30,
-                damage: 3,
+                reward: 40,
+                damage: 2,
                 icon: '🛡️',
                 color: '#6b7280'
             }
@@ -98,25 +128,40 @@ class TowerDefenseGame {
         
         this.waveConfigs = {
             easy: [
-                { enemies: [{ type: 'basic', count: 5 }], reward: 50 },
-                { enemies: [{ type: 'basic', count: 8 }], reward: 60 },
-                { enemies: [{ type: 'basic', count: 5 }, { type: 'fast', count: 3 }], reward: 80 },
-                { enemies: [{ type: 'basic', count: 10 }, { type: 'fast', count: 5 }], reward: 100 },
-                { enemies: [{ type: 'basic', count: 8 }, { type: 'fast', count: 8 }, { type: 'tank', count: 2 }], reward: 150 }
+                { enemies: [{ type: 'basic', count: 3 }], reward: 60 },
+                { enemies: [{ type: 'basic', count: 5 }], reward: 80 },
+                { enemies: [{ type: 'basic', count: 4 }, { type: 'fast', count: 2 }], reward: 100 },
+                { enemies: [{ type: 'basic', count: 6 }, { type: 'fast', count: 3 }], reward: 120 },
+                { enemies: [{ type: 'basic', count: 5 }, { type: 'fast', count: 5 }, { type: 'tank', count: 1 }], reward: 180 },
+                { enemies: [{ type: 'basic', count: 8 }, { type: 'fast', count: 6 }, { type: 'tank', count: 2 }], reward: 220 },
+                { enemies: [{ type: 'basic', count: 10 }, { type: 'fast', count: 8 }, { type: 'tank', count: 3 }], reward: 260 },
+                { enemies: [{ type: 'basic', count: 12 }, { type: 'fast', count: 10 }, { type: 'tank', count: 4 }], reward: 300 },
+                { enemies: [{ type: 'basic', count: 15 }, { type: 'fast', count: 12 }, { type: 'tank', count: 5 }], reward: 350 },
+                { enemies: [{ type: 'basic', count: 18 }, { type: 'fast', count: 15 }, { type: 'tank', count: 6 }], reward: 400 }
             ],
             medium: [
-                { enemies: [{ type: 'basic', count: 8 }], reward: 50 },
-                { enemies: [{ type: 'basic', count: 12 }, { type: 'fast', count: 4 }], reward: 80 },
-                { enemies: [{ type: 'basic', count: 10 }, { type: 'fast', count: 8 }], reward: 100 },
-                { enemies: [{ type: 'basic', count: 15 }, { type: 'fast', count: 10 }, { type: 'tank', count: 3 }], reward: 150 },
-                { enemies: [{ type: 'basic', count: 20 }, { type: 'fast', count: 15 }, { type: 'tank', count: 5 }], reward: 200 }
+                { enemies: [{ type: 'basic', count: 5 }], reward: 60 },
+                { enemies: [{ type: 'basic', count: 8 }, { type: 'fast', count: 3 }], reward: 100 },
+                { enemies: [{ type: 'basic', count: 7 }, { type: 'fast', count: 5 }], reward: 120 },
+                { enemies: [{ type: 'basic', count: 10 }, { type: 'fast', count: 7 }, { type: 'tank', count: 2 }], reward: 180 },
+                { enemies: [{ type: 'basic', count: 15 }, { type: 'fast', count: 10 }, { type: 'tank', count: 3 }], reward: 250 },
+                { enemies: [{ type: 'basic', count: 18 }, { type: 'fast', count: 12 }, { type: 'tank', count: 4 }], reward: 300 },
+                { enemies: [{ type: 'basic', count: 20 }, { type: 'fast', count: 15 }, { type: 'tank', count: 5 }], reward: 350 },
+                { enemies: [{ type: 'basic', count: 25 }, { type: 'fast', count: 18 }, { type: 'tank', count: 6 }], reward: 400 },
+                { enemies: [{ type: 'basic', count: 30 }, { type: 'fast', count: 20 }, { type: 'tank', count: 8 }], reward: 450 },
+                { enemies: [{ type: 'basic', count: 35 }, { type: 'fast', count: 25 }, { type: 'tank', count: 10 }], reward: 500 }
             ],
             hard: [
-                { enemies: [{ type: 'basic', count: 12 }, { type: 'fast', count: 6 }], reward: 80 },
-                { enemies: [{ type: 'basic', count: 15 }, { type: 'fast', count: 10 }, { type: 'tank', count: 4 }], reward: 120 },
-                { enemies: [{ type: 'basic', count: 20 }, { type: 'fast', count: 15 }, { type: 'tank', count: 6 }], reward: 180 },
-                { enemies: [{ type: 'basic', count: 25 }, { type: 'fast', count: 20 }, { type: 'tank', count: 8 }], reward: 250 },
-                { enemies: [{ type: 'basic', count: 30 }, { type: 'fast', count: 25 }, { type: 'tank', count: 10 }], reward: 350 }
+                { enemies: [{ type: 'basic', count: 8 }, { type: 'fast', count: 4 }], reward: 100 },
+                { enemies: [{ type: 'basic', count: 10 }, { type: 'fast', count: 7 }, { type: 'tank', count: 2 }], reward: 150 },
+                { enemies: [{ type: 'basic', count: 15 }, { type: 'fast', count: 10 }, { type: 'tank', count: 4 }], reward: 220 },
+                { enemies: [{ type: 'basic', count: 18 }, { type: 'fast', count: 15 }, { type: 'tank', count: 5 }], reward: 300 },
+                { enemies: [{ type: 'basic', count: 20 }, { type: 'fast', count: 18 }, { type: 'tank', count: 6 }], reward: 400 },
+                { enemies: [{ type: 'basic', count: 25 }, { type: 'fast', count: 20 }, { type: 'tank', count: 8 }], reward: 500 },
+                { enemies: [{ type: 'basic', count: 30 }, { type: 'fast', count: 25 }, { type: 'tank', count: 10 }], reward: 600 },
+                { enemies: [{ type: 'basic', count: 35 }, { type: 'fast', count: 30 }, { type: 'tank', count: 12 }], reward: 700 },
+                { enemies: [{ type: 'basic', count: 40 }, { type: 'fast', count: 35 }, { type: 'tank', count: 15 }], reward: 800 },
+                { enemies: [{ type: 'basic', count: 45 }, { type: 'fast', count: 40 }, { type: 'tank', count: 18 }], reward: 900 }
             ]
         };
         
@@ -126,6 +171,7 @@ class TowerDefenseGame {
     init() {
         this.createGrid();
         this.setupEventListeners();
+        this.loadAchievements();
         this.updateUI();
         this.showStartOverlay();
     }
@@ -199,6 +245,18 @@ class TowerDefenseGame {
         // Pause
         document.getElementById('resume-btn').addEventListener('click', () => this.resumeGame());
         
+        // Achievements
+        document.getElementById('achievements-btn').addEventListener('click', () => this.showAchievements());
+        document.getElementById('close-achievements-btn').addEventListener('click', () => this.hideAchievements());
+        
+        // Speed controls
+        document.querySelectorAll('.speed-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const speed = parseFloat(btn.dataset.speed);
+                this.setGameSpeed(speed);
+            });
+        });
+        
         // Keyboard controls
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') {
@@ -225,6 +283,134 @@ class TowerDefenseGame {
             });
             document.querySelector(`[data-tower="${towerType}"]`).classList.add('selected');
         }
+    }
+    
+    setGameSpeed(speed) {
+        // Track speed mode time for strategist achievement
+        if (this.gameSpeed === 0 && speed !== 0) {
+            this.achievementStats.speedModeTime += (Date.now() - this.achievementStats.lastSpeedChange) / 1000;
+            this.checkAchievement('strategist', this.achievementStats.speedModeTime >= 30);
+        }
+        this.achievementStats.lastSpeedChange = Date.now();
+        
+        this.gameSpeed = speed;
+        
+        // Update UI
+        document.querySelectorAll('.speed-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`[data-speed="${speed}"]`).classList.add('active');
+    }
+    
+    unlockAchievement(achievementId) {
+        const achievement = this.achievements[achievementId];
+        if (achievement && !achievement.unlocked) {
+            achievement.unlocked = true;
+            this.unlockedAchievements.push(achievement);
+            this.showAchievementNotification(achievement);
+            this.saveAchievements();
+        }
+    }
+    
+    checkAchievement(achievementId, condition) {
+        if (condition && !this.achievements[achievementId].unlocked) {
+            this.unlockAchievement(achievementId);
+        }
+    }
+    
+    showAchievementNotification(achievement) {
+        const notification = document.createElement('div');
+        notification.className = 'achievement-notification';
+        notification.innerHTML = `
+            <div class="achievement-icon">${achievement.icon}</div>
+            <div class="achievement-info">
+                <div class="achievement-title">Achievement Unlocked!</div>
+                <div class="achievement-name">${achievement.name}</div>
+                <div class="achievement-desc">${achievement.description}</div>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 500);
+        }, 3000);
+    }
+    
+    saveAchievements() {
+        try {
+            const saveData = {
+                achievements: Object.keys(this.achievements).reduce((acc, key) => {
+                    acc[key] = this.achievements[key].unlocked;
+                    return acc;
+                }, {}),
+                stats: this.achievementStats
+            };
+            localStorage.setItem('towerDefense_achievements', JSON.stringify(saveData));
+        } catch (e) {
+            console.log('Could not save achievements');
+        }
+    }
+    
+    loadAchievements() {
+        try {
+            const saveData = JSON.parse(localStorage.getItem('towerDefense_achievements'));
+            if (saveData) {
+                Object.keys(saveData.achievements).forEach(key => {
+                    if (this.achievements[key]) {
+                        this.achievements[key].unlocked = saveData.achievements[key];
+                        if (saveData.achievements[key]) {
+                            this.unlockedAchievements.push(this.achievements[key]);
+                        }
+                    }
+                });
+                this.achievementStats = { ...this.achievementStats, ...saveData.stats };
+            }
+        } catch (e) {
+            console.log('Could not load achievements');
+        }
+    }
+    
+    showAchievements() {
+        const overlay = document.getElementById('achievements-overlay');
+        overlay.classList.add('active');
+        this.populateAchievements();
+    }
+    
+    hideAchievements() {
+        const overlay = document.getElementById('achievements-overlay');
+        overlay.classList.remove('active');
+    }
+    
+    populateAchievements() {
+        const grid = document.getElementById('achievements-grid');
+        grid.innerHTML = '';
+        
+        Object.values(this.achievements).forEach(achievement => {
+            const achievementEl = document.createElement('div');
+            achievementEl.className = `achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'}`;
+            achievementEl.innerHTML = `
+                <div class="achievement-icon">${achievement.icon}</div>
+                <div class="achievement-info">
+                    <div class="achievement-name">${achievement.name}</div>
+                    <div class="achievement-description">${achievement.description}</div>
+                </div>
+                <div class="achievement-status">${achievement.unlocked ? '✓' : '🔒'}</div>
+            `;
+            grid.appendChild(achievementEl);
+        });
+        
+        // Update stats
+        const unlockedCount = this.unlockedAchievements.length;
+        const totalCount = Object.keys(this.achievements).length;
+        document.getElementById('unlocked-count').textContent = `${unlockedCount}/${totalCount}`;
+        document.getElementById('enemies-defeated').textContent = this.achievementStats.enemiesKilled;
+        document.getElementById('towers-placed').textContent = this.achievementStats.towersPlaced;
     }
     
     setGameMode(mode) {
@@ -342,6 +528,11 @@ class TowerDefenseGame {
         
         // Deduct gold
         this.gold -= tower.cost;
+        
+        // Track achievements
+        this.achievementStats.towersPlaced++;
+        this.checkAchievement('towerMaster', this.achievementStats.towersPlaced >= 10);
+        
         this.updateUI();
         
         // Reset selection
@@ -435,7 +626,25 @@ class TowerDefenseGame {
         this.wave++;
         this.waveInProgress = true;
         
-        const waveConfig = this.waveConfigs[this.difficulty][Math.min(this.wave - 1, this.waveConfigs[this.difficulty].length - 1)];
+        const waveConfigs = this.waveConfigs[this.difficulty];
+        let waveConfig;
+        
+        if (this.wave - 1 < waveConfigs.length) {
+            // Use predefined wave config
+            waveConfig = waveConfigs[this.wave - 1];
+        } else {
+            // Generate progressive wave beyond predefined configs
+            const lastWave = waveConfigs[waveConfigs.length - 1];
+            const waveMultiplier = 1 + (this.wave - waveConfigs.length) * 0.2; // 20% increase per extra wave
+            
+            waveConfig = {
+                enemies: lastWave.enemies.map(enemyConfig => ({
+                    type: enemyConfig.type,
+                    count: Math.floor(enemyConfig.count * waveMultiplier)
+                })),
+                reward: Math.floor(lastWave.reward * waveMultiplier)
+            };
+        }
         const enemies = waveConfig.enemies;
         
         // Update UI
@@ -569,7 +778,7 @@ class TowerDefenseGame {
                 const dy = targetY - enemy.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 
-                const speed = enemy.frozen ? enemy.speed * 0.3 : enemy.speed;
+                const speed = this.gameSpeed === 0 ? 0 : (enemy.frozen ? enemy.speed * 0.3 : enemy.speed) * this.gameSpeed;
                 
                 if (distance < speed) {
                     enemy.pathIndex++;
@@ -592,7 +801,7 @@ class TowerDefenseGame {
         const currentTime = Date.now();
         
         this.towers.forEach(tower => {
-            if (currentTime - tower.lastFired < tower.fireRate) return;
+            if (this.gameSpeed === 0 || currentTime - tower.lastFired < tower.fireRate / this.gameSpeed) return;
             
             // Find nearest enemy in range
             let nearestEnemy = null;
@@ -656,15 +865,15 @@ class TowerDefenseGame {
             const dy = projectile.target.y - projectile.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
-            if (distance < projectile.speed) {
+            if (this.gameSpeed === 0 || distance < projectile.speed * this.gameSpeed) {
                 // Hit target
                 this.damageEnemy(projectile.target, projectile.damage, projectile.type);
                 this.createImpactEffect(projectile.x, projectile.y);
                 this.removeProjectile(index);
             } else {
                 // Move projectile
-                projectile.x += (dx / distance) * projectile.speed;
-                projectile.y += (dy / distance) * projectile.speed;
+                projectile.x += (dx / distance) * projectile.speed * this.gameSpeed;
+                projectile.y += (dy / distance) * projectile.speed * this.gameSpeed;
                 this.updateProjectilePosition(projectile);
             }
         });
@@ -682,11 +891,40 @@ class TowerDefenseGame {
             enemy.frozenUntil = Date.now() + 2000;
         }
         
+        // Track tower-specific kills (only count when enemy dies)
+        if (enemy.health <= 0) {
+            switch (projectileType) {
+                case 'sniper':
+                    this.achievementStats.sniperKills++;
+                    this.checkAchievement('sniperElite', this.achievementStats.sniperKills >= 50);
+                    break;
+                case 'freeze':
+                    this.achievementStats.freezeKills++;
+                    this.checkAchievement('freezeChampion', this.achievementStats.freezeKills >= 30);
+                    break;
+                case 'rapid':
+                    this.achievementStats.rapidKills++;
+                    this.checkAchievement('rapidFire', this.achievementStats.rapidKills >= 100);
+                    break;
+            }
+        }
+        
         // Check if enemy is dead
         if (enemy.health <= 0) {
             this.gold += enemy.reward;
             this.score += enemy.reward * 2;
             this.createDeathEffect(enemy.x, enemy.y);
+            
+            // Track achievements
+            this.achievementStats.enemiesKilled++;
+            this.achievementStats.goldEarned += enemy.reward;
+            
+            // Check first blood
+            this.checkAchievement('firstBlood', this.achievementStats.enemiesKilled >= 1);
+            
+            // Check rich king
+            this.checkAchievement('richKing', this.achievementStats.goldEarned >= 500);
+            
             this.removeEnemy(this.enemies.indexOf(enemy));
             this.updateUI();
         }
@@ -776,6 +1014,17 @@ class TowerDefenseGame {
             this.gold += waveConfig.reward;
             this.score += waveConfig.reward * 5;
             
+            // Track achievements
+            this.achievementStats.wavesCompleted++;
+            this.checkAchievement('waveSurvivor', this.achievementStats.wavesCompleted >= 5);
+            this.checkAchievement('veteran', this.achievementStats.wavesCompleted >= 10);
+            this.checkAchievement('legend', this.achievementStats.wavesCompleted >= 20);
+            
+            // Check speed demon achievement
+            if (this.gameSpeed >= 2) {
+                this.checkAchievement('speedDemon', true);
+            }
+            
             // Enable next wave button
             document.getElementById('start-wave-btn').disabled = false;
             document.getElementById('enemies-next').textContent = '0';
@@ -849,8 +1098,8 @@ class TowerDefenseGame {
         
         // Reset game state
         this.wave = 0;
-        this.health = 20;
-        this.gold = 100;
+        this.health = 25;
+        this.gold = 150;
         this.score = 0;
         this.waveInProgress = false;
         this.gameMode = 'place';
