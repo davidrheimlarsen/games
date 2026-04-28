@@ -103,6 +103,7 @@ class TowerDefenseGame {
                 cost: 250,
                 damage: 40,
                 range: 120,
+                innerRange: 40,
                 fireRate: 3000,
                 color: '#dc2626',
                 icon: '💣',
@@ -519,6 +520,20 @@ class TowerDefenseGame {
         preview.style.top = `${centerY - tower.range}px`;
         preview.style.position = 'absolute';
         
+        // Add donut hole for cannon tower preview
+        if (tower.innerRange) {
+            preview.style.background = `
+                radial-gradient(circle, transparent ${tower.innerRange}px, 
+                rgba(220, 38, 38, 0.15) ${tower.innerRange}px, 
+                rgba(220, 38, 38, 0.05) 70%, transparent 100%)
+            `;
+            preview.style.border = `2px dashed rgba(220, 38, 38, 0.4)`;
+            preview.style.boxShadow = `
+                inset 0 0 0 ${tower.innerRange}px transparent,
+                0 0 0 2px rgba(220, 38, 38, 0.2)
+            `;
+        }
+        
         const gameBoard = document.getElementById('gameBoard');
         gameBoard.appendChild(preview);
         this.previewRangeElement = preview;
@@ -602,6 +617,21 @@ class TowerDefenseGame {
         rangeIndicator.style.height = `${diameter}px`;
         rangeIndicator.style.left = `${centerX - tower.range}px`;
         rangeIndicator.style.top = `${centerY - tower.range}px`;
+        
+        // Add donut hole for cannon tower
+        if (tower.innerRange) {
+            const innerDiameter = tower.innerRange * 2;
+            rangeIndicator.style.background = `
+                radial-gradient(circle, transparent ${tower.innerRange}px, 
+                rgba(220, 38, 38, 0.15) ${tower.innerRange}px, 
+                rgba(220, 38, 38, 0.05) 70%, transparent 100%)
+            `;
+            rangeIndicator.style.border = `2px dashed rgba(220, 38, 38, 0.4)`;
+            rangeIndicator.style.boxShadow = `
+                inset 0 0 0 ${tower.innerRange}px transparent,
+                0 0 0 2px rgba(220, 38, 38, 0.2)
+            `;
+        }
         
         cellElement.appendChild(rangeIndicator);
         tower.rangeElement = rangeIndicator;
@@ -872,7 +902,13 @@ class TowerDefenseGame {
             
             this.enemies.forEach(enemy => {
                 const distance = this.getDistance(tower, enemy);
-                if (distance <= tower.range && distance < nearestDistance) {
+                // Check if enemy is in range (consider donut shape for cannon towers)
+                let inRange = distance <= tower.range;
+                if (tower.innerRange) {
+                    inRange = inRange && distance >= tower.innerRange;
+                }
+                
+                if (inRange && distance < nearestDistance) {
                     nearestEnemy = enemy;
                     nearestDistance = distance;
                 }
