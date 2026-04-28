@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Racing Game - Speed Circuit</title>
+    <link rel="stylesheet" href="racing-game.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="menu-screen" id="menuScreen">
+            <div class="menu-content">
+                <h1>Speed Circuit</h1>
+                <div class="vehicle-selection">
+                    <h3>Select Your Vehicle</h3>
+                    <div class="vehicle-grid">
+                        <div class="vehicle-card active" data-vehicle="sports">
+                            <div class="vehicle-preview sports-car"></div>
+                            <h4>Sports Car</h4>
+                            <div class="vehicle-stats">
+                                <div class="stat">
+                                    <span class="stat-label">Speed</span>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill" style="width: 90%;"></div>
+                                    </div>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Handling</span>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill" style="width: 85%;"></div>
+                                    </div>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Acceleration</span>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill" style="width: 95%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vehicle-card" data-vehicle="racing">
+                            <div class="vehicle-preview racing-car"></div>
+                            <h4>Racing Car</h4>
+                            <div class="vehicle-stats">
+                                <div class="stat">
+                                    <span class="stat-label">Speed</span>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill" style="width: 100%;"></div>
+                                    </div>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Handling</span>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill" style="width: 95%;"></div>
+                                    </div>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Acceleration</span>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill" style="width: 85%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vehicle-card" data-vehicle="muscle">
+                            <div class="vehicle-preview muscle-car"></div>
+                            <h4>Muscle Car</h4>
+                            <div class="vehicle-stats">
+                                <div class="stat">
+                                    <span class="stat-label">Speed</span>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill" style="width: 85%;"></div>
+                                    </div>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Handling</span>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill" style="width: 70%;"></div>
+                                    </div>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Acceleration</span>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill" style="width: 100%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="track-selection">
+                    <h3>Select Track</h3>
+                    <div class="track-options">
+                        <button class="track-btn active" data-track="circuit">Circuit</button>
+                        <button class="track-btn" data-track="oval">Oval</button>
+                        <button class="track-btn" data-track="figure8">Figure 8</button>
+                    </div>
+                </div>
+                <div class="difficulty-selection">
+                    <h3>Difficulty</h3>
+                    <div class="difficulty-options">
+                        <button class="diff-btn active" data-difficulty="easy">Easy</button>
+                        <button class="diff-btn" data-difficulty="medium">Medium</button>
+                        <button class="diff-btn" data-difficulty="hard">Hard</button>
+                    </div>
+                </div>
+                <button class="start-race-btn" id="startRaceBtn">Start Race</button>
+            </div>
+        </div>
+
+        <div class="game-screen" id="gameScreen">
+            <div class="game-ui">
+                <div class="race-info">
+                    <div class="lap-counter">
+                        <span class="label">Lap</span>
+                        <span class="value" id="currentLap">1</span>
+                        <span class="separator">/</span>
+                        <span class="value" id="totalLaps">3</span>
+                    </div>
+                    <div class="lap-time">
+                        <span class="label">Lap Time</span>
+                        <span class="value" id="lapTime">00:00.00</span>
+                    </div>
+                    <div class="best-lap">
+                        <span class="label">Best Lap</span>
+                        <span class="value" id="bestLap">--:--:--</span>
+                    </div>
+                    <div class="position">
+                        <span class="label">Position</span>
+                        <span class="value" id="position">1st</span>
+                    </div>
+                </div>
+                <div class="speed-meter">
+                    <div class="speed-bar">
+                        <div class="speed-fill" id="speedFill"></div>
+                    </div>
+                    <div class="speed-value" id="speedValue">0 mph</div>
+                </div>
+                <div class="mini-map" id="miniMap">
+                    <canvas id="miniMapCanvas"></canvas>
+                </div>
+            </div>
+            <div class="race-track">
+                <canvas id="gameCanvas"></canvas>
+            </div>
+            <div class="controls-hint">
+                <div class="control">
+                    <kbd>↑</kbd> Accelerate
+                </div>
+                <div class="control">
+                    <kbd>↓</kbd> Brake
+                </div>
+                <div class="control">
+                    <kbd>←</kbd> <kbd>→</kbd> Steer
+                </div>
+                <div class="control">
+                    <kbd>Space</kbd> Pause
+                </div>
+            </div>
+        </div>
+
+        <div class="race-results" id="raceResults">
+            <div class="results-content">
+                <h2>Race Complete!</h2>
+                <div class="final-position">
+                    <div class="position-badge" id="finalPosition">1st</div>
+                </div>
+                <div class="race-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Total Time:</span>
+                        <span class="stat-value" id="totalTime">00:00.00</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Best Lap:</span>
+                        <span class="stat-value" id="finalBestLap">00:00.00</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Average Speed:</span>
+                        <span class="stat-value" id="avgSpeed">0 mph</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Top Speed:</span>
+                        <span class="stat-value" id="topSpeed">0 mph</span>
+                    </div>
+                </div>
+                <div class="leaderboard">
+                    <h3>Leaderboard</h3>
+                    <div class="leaderboard-list" id="leaderboardList"></div>
+                </div>
+                <div class="results-buttons">
+                    <button class="btn btn-primary" id="raceAgainBtn">Race Again</button>
+                    <button class="btn btn-secondary" id="backToMenuBtn">Back to Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="pause-menu" id="pauseMenu">
+            <div class="pause-content">
+                <h2>Race Paused</h2>
+                <div class="pause-buttons">
+                    <button class="btn btn-primary" id="resumeBtn">Resume</button>
+                    <button class="btn btn-secondary" id="restartBtn">Restart</button>
+                    <button class="btn btn-secondary" id="quitBtn">Quit to Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="countdown" id="countdown">
+            <div class="countdown-number" id="countdownNumber">3</div>
+        </div>
+    </div>
+
+    <script src="racing-game.js"></script>
+</body>
+</html>
