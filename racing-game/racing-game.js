@@ -822,6 +822,11 @@ class RacingGame {
         });
         
         document.getElementById('raceResults').classList.add('active');
+        
+        // Automatically return to home screen after 5 seconds
+        setTimeout(() => {
+            window.location.href = '../index.html';
+        }, 5000);
     }
 }
 
