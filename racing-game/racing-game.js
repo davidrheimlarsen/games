@@ -378,24 +378,24 @@ class RacingGame {
     }
     
     checkTrackBounds(vehicle) {
-        // Define track boundaries for each track type
+        // Define track boundaries for each track type - matching actual checkpoint positions
         const trackBounds = {
             circuit: {
                 centerX: 400,
                 centerY: 300,
-                outerRadius: 250,
-                innerRadius: 150
+                outerRadius: 320,  // Large enough to reach checkpoints at y=100 and y=500
+                innerRadius: 80     // Small enough to not block inner area
             },
             oval: {
                 centerX: 400,
                 centerY: 300,
-                outerRadius: 280,
-                innerRadius: 130
+                outerRadius: 350,  // Large enough for oval checkpoints
+                innerRadius: 50     // Small inner boundary
             },
             figure8: {
-                // Figure 8 has two circles
-                leftCircle: { x: 300, y: 300, outerRadius: 120, innerRadius: 60 },
-                rightCircle: { x: 500, y: 300, outerRadius: 120, innerRadius: 60 }
+                // Figure 8 has two circles - adjust to match checkpoint positions
+                leftCircle: { x: 300, y: 300, outerRadius: 150, innerRadius: 50 },
+                rightCircle: { x: 500, y: 300, outerRadius: 150, innerRadius: 50 }
             }
         };
         
@@ -582,29 +582,29 @@ class RacingGame {
         this.ctx.setLineDash([10, 5]);
         
         if (this.currentTrack === 'figure8') {
-            // Draw rails for figure 8 (two circles)
+            // Draw rails for figure 8 (two circles) - updated boundaries
             // Left circle rails
             this.ctx.beginPath();
-            this.ctx.arc(300, 300, 60, 0, Math.PI * 2);
+            this.ctx.arc(300, 300, 50, 0, Math.PI * 2);
             this.ctx.stroke();
             
             this.ctx.beginPath();
-            this.ctx.arc(300, 300, 120, 0, Math.PI * 2);
+            this.ctx.arc(300, 300, 150, 0, Math.PI * 2);
             this.ctx.stroke();
             
             // Right circle rails
             this.ctx.beginPath();
-            this.ctx.arc(500, 300, 60, 0, Math.PI * 2);
+            this.ctx.arc(500, 300, 50, 0, Math.PI * 2);
             this.ctx.stroke();
             
             this.ctx.beginPath();
-            this.ctx.arc(500, 300, 120, 0, Math.PI * 2);
+            this.ctx.arc(500, 300, 150, 0, Math.PI * 2);
             this.ctx.stroke();
         } else {
-            // Draw rails for circuit and oval tracks
+            // Draw rails for circuit and oval tracks - updated boundaries
             const bounds = {
-                circuit: { centerX: 400, centerY: 300, outerRadius: 250, innerRadius: 150 },
-                oval: { centerX: 400, centerY: 300, outerRadius: 280, innerRadius: 130 }
+                circuit: { centerX: 400, centerY: 300, outerRadius: 320, innerRadius: 80 },
+                oval: { centerX: 400, centerY: 300, outerRadius: 350, innerRadius: 50 }
             };
             
             const trackBounds = bounds[this.currentTrack];
