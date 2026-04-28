@@ -24,6 +24,7 @@ class TowerDefenseGame {
         this.bestScores = {}; // Fallback for localStorage issues
         this.previewRangeElement = null;
         this.gameSpeed = 1; // Default game speed
+        this.autoWaveEnabled = false; // Auto-wave functionality
         
         // Achievements system
         this.achievements = {
@@ -96,6 +97,42 @@ class TowerDefenseGame {
                 projectileSpeed: 4,
                 slowEffect: 0.5,
                 slowDuration: 2000
+            },
+            cannon: {
+                name: 'Cannon Tower',
+                cost: 250,
+                damage: 40,
+                range: 120,
+                fireRate: 3000,
+                color: '#dc2626',
+                icon: '💣',
+                projectileSpeed: 3,
+                areaDamage: true,
+                areaRadius: 60
+            },
+            poison: {
+                name: 'Poison Tower',
+                cost: 175,
+                damage: 6,
+                range: 100,
+                fireRate: 1200,
+                color: '#84cc16',
+                icon: '☠️',
+                projectileSpeed: 5,
+                poisonDamage: 3,
+                poisonDuration: 4000
+            },
+            laser: {
+                name: 'Laser Tower',
+                cost: 300,
+                damage: 15,
+                range: 150,
+                fireRate: 100,
+                color: '#f97316',
+                icon: '⚡',
+                projectileSpeed: 20,
+                continuous: true,
+                beamWidth: 3
             }
         };
         
@@ -226,6 +263,18 @@ class TowerDefenseGame {
         document.getElementById('start-wave-btn').addEventListener('click', () => this.startWave());
         document.getElementById('sell-mode-btn').addEventListener('click', () => this.setGameMode('sell'));
         document.getElementById('upgrade-mode-btn').addEventListener('click', () => this.setGameMode('upgrade'));
+        
+        // Auto-wave button
+        document.getElementById('auto-wave-btn').addEventListener('click', () => {
+            this.autoWaveEnabled = !this.autoWaveEnabled;
+            const btn = document.getElementById('auto-wave-btn');
+            btn.textContent = this.autoWaveEnabled ? 'ON' : 'OFF';
+            btn.classList.toggle('active', this.autoWaveEnabled);
+            
+            if (this.autoWaveEnabled && !this.waveInProgress && this.gameState === 'playing') {
+                this.startWave();
+            }
+        });
         
         // Difficulty selection
         document.querySelectorAll('.difficulty-btn').forEach(btn => {
@@ -563,6 +612,11 @@ class TowerDefenseGame {
         const tower = cell.tower;
         if (!tower) return;
         
+        // Cleanup laser beam if it exists
+        if (tower.laserElement) {
+            tower.laserElement.remove();
+        }
+        
         // Refund 50% of cost
         const sellPrice = Math.floor(this.towerTypes[tower.type].cost * 0.5);
         this.gold += sellPrice;
@@ -725,6 +779,9 @@ class TowerDefenseGame {
             
             // Update frozen state
             enemy.element.classList.toggle('frozen', enemy.frozen);
+            
+            // Update poisoned state
+            enemy.element.classList.toggle('poisoned', enemy.poisoned);
         }
     }
     
@@ -768,6 +825,14 @@ class TowerDefenseGame {
                 enemy.frozen = false;
             }
             
+            // Check poison state and apply damage
+            if (enemy.poisoned && currentTime > enemy.poisonUntil) {
+                enemy.poisoned = false;
+            }
+            if (enemy.poisoned && currentTime % 500 < 16) { // Apply poison damage every 500ms
+                this.damageEnemy(enemy, enemy.poisonDamage, 'poison');
+            }
+            
             // Move enemy
             if (enemy.pathIndex < this.path.length - 1) {
                 const target = this.path[enemy.pathIndex + 1];
@@ -801,8 +866,6 @@ class TowerDefenseGame {
         const currentTime = Date.now();
         
         this.towers.forEach(tower => {
-            if (this.gameSpeed === 0 || currentTime - tower.lastFired < tower.fireRate / this.gameSpeed) return;
-            
             // Find nearest enemy in range
             let nearestEnemy = null;
             let nearestDistance = Infinity;
@@ -815,9 +878,30 @@ class TowerDefenseGame {
                 }
             });
             
-            if (nearestEnemy) {
-                this.fireProjectile(tower, nearestEnemy);
-                tower.lastFired = currentTime;
+            // Handle laser tower continuous beam
+            if (tower.type === 'laser') {
+                if (nearestEnemy && this.gameSpeed !== 0) {
+                    if (currentTime - tower.lastFired >= tower.fireRate / this.gameSpeed) {
+                        this.createLaserBeam(tower, nearestEnemy);
+                        tower.lastFired = currentTime;
+                    }
+                    // Apply continuous damage
+                    this.damageEnemy(nearestEnemy, tower.damage * 0.016 * this.gameSpeed, 'laser'); // 60fps timing
+                } else {
+                    // Remove laser beam if no target
+                    if (tower.laserElement) {
+                        tower.laserElement.remove();
+                        tower.laserElement = null;
+                    }
+                }
+            } else {
+                // Handle other tower types
+                if (this.gameSpeed === 0 || currentTime - tower.lastFired < tower.fireRate / this.gameSpeed) return;
+                
+                if (nearestEnemy) {
+                    this.fireProjectile(tower, nearestEnemy);
+                    tower.lastFired = currentTime;
+                }
             }
         });
     }
@@ -847,6 +931,39 @@ class TowerDefenseGame {
         this.updateProjectilePosition(projectile);
     }
     
+    createLaserBeam(tower, target) {
+        // Remove existing laser beam
+        if (tower.laserElement) {
+            tower.laserElement.remove();
+        }
+        
+        const laserElement = document.createElement('div');
+        laserElement.className = 'laser-beam';
+        
+        const towerX = tower.x * this.cellSize + this.cellSize / 2;
+        const towerY = tower.y * this.cellSize + this.cellSize / 2;
+        
+        const dx = target.x - towerX;
+        const dy = target.y - towerY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+        
+        laserElement.style.width = `${distance}px`;
+        laserElement.style.height = '3px';
+        laserElement.style.background = `linear-gradient(90deg, ${tower.color}, transparent)`;
+        laserElement.style.left = `${towerX}px`;
+        laserElement.style.top = `${towerY}px`;
+        laserElement.style.transform = `rotate(${angle}deg)`;
+        laserElement.style.transformOrigin = '0 50%';
+        laserElement.style.position = 'absolute';
+        laserElement.style.zIndex = '4';
+        laserElement.style.boxShadow = `0 0 10px ${tower.color}`;
+        
+        const gameBoard = document.getElementById('gameBoard');
+        gameBoard.appendChild(laserElement);
+        tower.laserElement = laserElement;
+    }
+    
     updateProjectilePosition(projectile) {
         if (projectile.element) {
             projectile.element.style.left = `${projectile.x - 3}px`;
@@ -867,8 +984,8 @@ class TowerDefenseGame {
             
             if (this.gameSpeed === 0 || distance < projectile.speed * this.gameSpeed) {
                 // Hit target
-                this.damageEnemy(projectile.target, projectile.damage, projectile.type);
-                this.createImpactEffect(projectile.x, projectile.y);
+                this.damageEnemy(projectile.target, projectile.damage, projectile.type, projectile);
+                this.createImpactEffect(projectile.x, projectile.y, projectile.type);
                 this.removeProjectile(index);
             } else {
                 // Move projectile
@@ -879,7 +996,7 @@ class TowerDefenseGame {
         });
     }
     
-    damageEnemy(enemy, damage, projectileType) {
+    damageEnemy(enemy, damage, projectileType, projectile = null) {
         enemy.health -= damage;
         
         // Show damage text
@@ -889,6 +1006,18 @@ class TowerDefenseGame {
         if (projectileType === 'freeze') {
             enemy.frozen = true;
             enemy.frozenUntil = Date.now() + 2000;
+        }
+        
+        // Apply poison effect
+        if (projectileType === 'poison' && !enemy.poisoned) {
+            enemy.poisoned = true;
+            enemy.poisonDamage = 3;
+            enemy.poisonUntil = Date.now() + 4000;
+        }
+        
+        // Apply area damage for cannon
+        if (projectileType === 'cannon' && projectile) {
+            this.applyAreaDamage(projectile.x, projectile.y, 60, 20);
         }
         
         // Track tower-specific kills (only count when enemy dies)
@@ -943,10 +1072,22 @@ class TowerDefenseGame {
         setTimeout(() => damageElement.remove(), 1000);
     }
     
-    createImpactEffect(x, y) {
-        for (let i = 0; i < 5; i++) {
-            this.createParticle(x, y, this.towerTypes.basic.color);
+    createImpactEffect(x, y, projectileType = 'basic') {
+        const color = this.towerTypes[projectileType].color;
+        const particleCount = projectileType === 'cannon' ? 10 : 5;
+        
+        for (let i = 0; i < particleCount; i++) {
+            this.createParticle(x, y, color);
         }
+    }
+    
+    applyAreaDamage(x, y, radius, damage) {
+        this.enemies.forEach(enemy => {
+            const distance = this.getDistance({ x, y }, enemy);
+            if (distance <= radius && enemy !== this.projectiles.find(p => p.target === enemy)?.target) {
+                this.damageEnemy(enemy, damage, 'cannon');
+            }
+        });
     }
     
     createDeathEffect(x, y) {
@@ -1028,6 +1169,15 @@ class TowerDefenseGame {
             // Enable next wave button
             document.getElementById('start-wave-btn').disabled = false;
             document.getElementById('enemies-next').textContent = '0';
+            
+            // Auto-start next wave if enabled
+            if (this.autoWaveEnabled) {
+                setTimeout(() => {
+                    if (this.autoWaveEnabled && !this.waveInProgress && this.gameState === 'playing') {
+                        this.startWave();
+                    }
+                }, 2000); // 2 second delay between waves
+            }
             
             this.updateUI();
         }

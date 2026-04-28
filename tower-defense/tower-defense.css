@@ -171,6 +171,9 @@ body {
     padding: 20px;
     backdrop-filter: blur(10px);
     height: fit-content;
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
 }
 
 .tower-panel h3 {
@@ -184,6 +187,9 @@ body {
     flex-direction: column;
     gap: 12px;
     margin-bottom: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 8px;
 }
 
 .tower-card {
@@ -220,6 +226,26 @@ body {
     background: rgba(30, 41, 59, 0.5);
 }
 
+/* Custom scrollbar for tower options */
+.tower-options::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tower-options::-webkit-scrollbar-track {
+    background: rgba(30, 41, 59, 0.3);
+    border-radius: 3px;
+}
+
+.tower-options::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 3px;
+    transition: background 0.3s ease;
+}
+
+.tower-options::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+}
+
 .tower-icon {
     font-size: 2rem;
     width: 50px;
@@ -251,6 +277,47 @@ body {
     display: flex;
     flex-direction: column;
     gap: 8px;
+}
+
+.auto-wave-control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(30, 41, 59, 0.3);
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.auto-wave-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.auto-wave-btn {
+    background: rgba(148, 163, 184, 0.3);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    border-radius: 12px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    min-width: 44px;
+}
+
+.auto-wave-btn:hover {
+    background: rgba(148, 163, 184, 0.4);
+    color: var(--text-primary);
+}
+
+.auto-wave-btn.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
 }
 
 .btn {
@@ -371,6 +438,18 @@ body {
     color: #06b6d4;
 }
 
+.tower.cannon {
+    color: #dc2626;
+}
+
+.tower.poison {
+    color: #84cc16;
+}
+
+.tower.laser {
+    color: #f97316;
+}
+
 .range-indicator {
     position: absolute;
     border-radius: 50%;
@@ -397,6 +476,21 @@ body {
 .range-indicator.freeze {
     background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, rgba(6, 182, 212, 0.05) 70%, transparent 100%);
     border: 2px dashed rgba(6, 182, 212, 0.4);
+}
+
+.range-indicator.cannon {
+    background: radial-gradient(circle, rgba(220, 38, 38, 0.15) 0%, rgba(220, 38, 38, 0.05) 70%, transparent 100%);
+    border: 2px dashed rgba(220, 38, 38, 0.4);
+}
+
+.range-indicator.poison {
+    background: radial-gradient(circle, rgba(132, 204, 22, 0.15) 0%, rgba(132, 204, 22, 0.05) 70%, transparent 100%);
+    border: 2px dashed rgba(132, 204, 22, 0.4);
+}
+
+.range-indicator.laser {
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.15) 0%, rgba(249, 115, 22, 0.05) 70%, transparent 100%);
+    border: 2px dashed rgba(249, 115, 22, 0.4);
 }
 
 .range-indicator.preview {
@@ -449,6 +543,20 @@ body {
     filter: brightness(1.5) hue-rotate(180deg);
 }
 
+.enemy.poisoned {
+    filter: hue-rotate(90deg) saturate(1.5);
+    animation: poison-pulse 0.5s ease-in-out infinite;
+}
+
+@keyframes poison-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
 .enemy-health-bar {
     position: absolute;
     top: -8px;
@@ -496,6 +604,28 @@ body {
 .projectile.freeze {
     background: #06b6d4;
     box-shadow: 0 0 4px #06b6d4;
+}
+
+.projectile.cannon {
+    background: #dc2626;
+    box-shadow: 0 0 8px #dc2626;
+    width: 12px;
+    height: 12px;
+}
+
+.projectile.poison {
+    background: #84cc16;
+    box-shadow: 0 0 5px #84cc16;
+    width: 7px;
+    height: 7px;
+}
+
+.projectile.laser {
+    background: #f97316;
+    box-shadow: 0 0 10px #f97316;
+    width: 3px;
+    height: 20px;
+    border-radius: 1px;
 }
 
 .damage-text {
