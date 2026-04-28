@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe AI</title>
+    <link rel="stylesheet" href="tic-tac-toe-ai.css">
+</head>
+<body>
+    <main class="game-container">
+        <header class="game-header">
+            <div class="header-nav">
+                <a href="../index.html" class="home-btn">🏠 Home</a>
+                <h1>Tic-Tac-Toe AI</h1>
+            </div>
+            <p>Challenge the computer in this classic game!</p>
+        </header>
+
+        <section class="game-settings">
+            <div class="difficulty-selector">
+                <label for="difficulty">AI Difficulty:</label>
+                <select id="difficulty" class="difficulty-select">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                    <option value="unbeatable">Unbeatable</option>
+                </select>
+            </div>
+            <div class="player-selector">
+                <label>Play as:</label>
+                <div class="player-toggle">
+                    <button class="player-btn active" data-player="X">X</button>
+                    <button class="player-btn" data-player="O">O</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-stats">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Wins</span>
+                        <span class="stat-value" id="wins">0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🤝</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Draws</span>
+                        <span class="stat-value" id="draws">0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">😔</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Losses</span>
+                        <span class="stat-value" id="losses">0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Streak</span>
+                        <span class="stat-value" id="streak">0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-board-container">
+            <div class="turn-indicator">
+                <div class="current-turn" id="currentTurn">Your turn (X)</div>
+                <div class="thinking" id="thinking">AI is thinking...</div>
+            </div>
+            
+            <div class="game-board" id="gameBoard">
+                <div class="cell" data-index="0"></div>
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+            </div>
+
+            <div class="win-line" id="winLine"></div>
+        </section>
+
+        <section class="game-controls">
+            <button class="btn btn-primary" id="newGame">New Game</button>
+            <button class="btn btn-secondary" id="resetStats">Reset Statistics</button>
+            <button class="btn btn-secondary" id="showHistory">Game History</button>
+        </section>
+
+        <div class="result-message" id="resultMessage"></div>
+
+        <div class="history-modal" id="historyModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Game History</h3>
+                    <button class="close-btn" id="closeHistory">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="history-list" id="historyList"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>How to Play:</h3>
+            <ul>
+                <li>🎯 Click any empty cell to place your mark</li>
+                <li>🤖 The AI will automatically respond</li>
+                <li>🏆 Get 3 in a row (horizontal, vertical, or diagonal) to win</li>
+                <li>⚙️ Choose your difficulty level and symbol (X or O)</li>
+                <li>📊 Track your statistics and game history</li>
+            </ul>
+        </div>
+    </main>
+
+    <script src="tic-tac-toe-ai.js"></script>
+</body>
+</html>

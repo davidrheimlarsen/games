@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game</title>
+    <link rel="stylesheet" href="hangman.css">
+</head>
+<body>
+    <main class="game-container">
+        <header class="game-header">
+            <div class="header-nav">
+                <a href="../index.html" class="home-btn">🏠 Home</a>
+                <h1>Hangman</h1>
+            </div>
+            <p>Guess the word letter by letter!</p>
+        </header>
+
+        <div class="game-stats">
+            <div class="stat">
+                <span class="stat-label">Wins:</span>
+                <span class="stat-value" id="wins">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Losses:</span>
+                <span class="stat-value" id="losses">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Streak:</span>
+                <span class="stat-value" id="streak">0</span>
+            </div>
+        </div>
+
+        <section class="hangman-visual">
+            <svg class="hangman-svg" viewBox="0 0 250 300">
+                <!-- Gallows -->
+                <line x1="10" y1="290" x2="150" y2="290" stroke="#8b4513" stroke-width="4"/>
+                <line x1="50" y1="290" x2="50" y2="20" stroke="#8b4513" stroke-width="4"/>
+                <line x1="50" y1="20" x2="130" y2="20" stroke="#8b4513" stroke-width="4"/>
+                <line x1="130" y1="20" x2="130" y2="50" stroke="#8b4513" stroke-width="4"/>
+                
+                <!-- Head -->
+                <circle class="part" id="head" cx="130" cy="70" r="20" stroke="#333" stroke-width="3" fill="none" style="display: none;"/>
+                
+                <!-- Body -->
+                <line class="part" id="body" x1="130" y1="90" x2="130" y2="150" stroke="#333" stroke-width="3" style="display: none;"/>
+                
+                <!-- Left arm -->
+                <line class="part" id="leftarm" x1="130" y1="110" x2="100" y2="130" stroke="#333" stroke-width="3" style="display: none;"/>
+                
+                <!-- Right arm -->
+                <line class="part" id="rightarm" x1="130" y1="110" x2="160" y2="130" stroke="#333" stroke-width="3" style="display: none;"/>
+                
+                <!-- Left leg -->
+                <line class="part" id="leftleg" x1="130" y1="150" x2="110" y2="190" stroke="#333" stroke-width="3" style="display: none;"/>
+                
+                <!-- Right leg -->
+                <line class="part" id="rightleg" x1="130" y1="150" x2="150" y2="190" stroke="#333" stroke-width="3" style="display: none;"/>
+            </svg>
+        </section>
+
+        <section class="word-display">
+            <div class="word" id="word"></div>
+            <div class="hint" id="hint"></div>
+        </section>
+
+        <section class="keyboard">
+            <div class="keyboard-row">
+                <button class="key" data-letter="Q">Q</button>
+                <button class="key" data-letter="W">W</button>
+                <button class="key" data-letter="E">E</button>
+                <button class="key" data-letter="R">R</button>
+                <button class="key" data-letter="T">T</button>
+                <button class="key" data-letter="Y">Y</button>
+                <button class="key" data-letter="U">U</button>
+                <button class="key" data-letter="I">I</button>
+                <button class="key" data-letter="O">O</button>
+                <button class="key" data-letter="P">P</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" data-letter="A">A</button>
+                <button class="key" data-letter="S">S</button>
+                <button class="key" data-letter="D">D</button>
+                <button class="key" data-letter="F">F</button>
+                <button class="key" data-letter="G">G</button>
+                <button class="key" data-letter="H">H</button>
+                <button class="key" data-letter="J">J</button>
+                <button class="key" data-letter="K">K</button>
+                <button class="key" data-letter="L">L</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" data-letter="Z">Z</button>
+                <button class="key" data-letter="X">X</button>
+                <button class="key" data-letter="C">C</button>
+                <button class="key" data-letter="V">V</button>
+                <button class="key" data-letter="B">B</button>
+                <button class="key" data-letter="N">N</button>
+                <button class="key" data-letter="M">M</button>
+            </div>
+        </section>
+
+        <div class="game-controls">
+            <button class="btn btn-primary" id="newGame">New Game</button>
+            <button class="btn btn-secondary" id="hintBtn">Get Hint (-1 Point)</button>
+        </div>
+
+        <div class="message" id="message"></div>
+    </main>
+
+    <script src="hangman.js"></script>
+</body>
+</html>

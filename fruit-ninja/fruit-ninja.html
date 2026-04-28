@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fruit Ninja</title>
+    <link rel="stylesheet" href="fruit-ninja.css">
+</head>
+<body>
+    <main class="game-container">
+        <header class="game-header">
+            <div class="header-nav">
+                <a href="../index.html" class="home-btn">🏠 Home</a>
+                <h1>Fruit Ninja</h1>
+            </div>
+            <p>Swipe to slice the fruits!</p>
+        </header>
+
+        <section class="game-stats">
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-info">
+                    <span class="stat-label">Score</span>
+                    <span class="stat-value" id="score">0</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">❤️</div>
+                <div class="stat-info">
+                    <span class="stat-label">Lives</span>
+                    <span class="stat-value" id="lives">3</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-info">
+                    <span class="stat-label">Combo</span>
+                    <span class="stat-value" id="combo">0</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-info">
+                    <span class="stat-label">High Score</span>
+                    <span class="stat-value" id="highScore">0</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-area">
+            <canvas id="gameCanvas"></canvas>
+            <div class="game-overlay" id="gameOverlay">
+                <div class="overlay-content">
+                    <h2 id="overlayTitle">Ready to Slice?</h2>
+                    <p id="overlayMessage">Click or tap to start</p>
+                    <button class="btn btn-primary" id="startBtn">Start Game</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-controls">
+            <button class="btn btn-secondary" id="pauseBtn">Pause</button>
+            <button class="btn btn-secondary" id="resetBtn">Reset</button>
+        </section>
+
+        <div class="instructions">
+            <h3>How to Play:</h3>
+            <ul>
+                <li>🖱️ <strong>Mouse:</strong> Click and drag to slice fruits</li>
+                <li>📱 <strong>Touch:</strong> Swipe to slice fruits</li>
+                <li>🍎 Slice fruits for points</li>
+                <li>💣 Avoid bombs (costs a life)</li>
+                <li>🔥 Build combos for bonus points</li>
+                <li>❤️ You have 3 lives</li>
+            </ul>
+        </div>
+    </main>
+
+    <script src="fruit-ninja.js"></script>
+</body>
+</html>
