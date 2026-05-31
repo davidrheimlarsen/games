@@ -22,6 +22,22 @@
                     </div>
                 </div>
                 <div class="game-status" id="gameStatus">Game in Progress</div>
+                <div class="game-mode">
+                    <span class="mode-label">Game Mode:</span>
+                    <select id="gameMode" class="mode-select">
+                        <option value="pvp">Player vs Player</option>
+                        <option value="ai">Player vs AI</option>
+                    </select>
+                </div>
+                <div class="ai-difficulty" id="aiDifficultyContainer" style="display: none;">
+                    <span class="difficulty-label">AI Difficulty:</span>
+                    <select id="aiDifficulty" class="difficulty-select">
+                        <option value="1">Easy</option>
+                        <option value="2">Medium</option>
+                        <option value="3" selected>Hard</option>
+                        <option value="4">Expert</option>
+                    </select>
+                </div>
             </div>
         </header>
 

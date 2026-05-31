@@ -132,6 +132,74 @@ body {
     color: var(--warning-color);
 }
 
+.game-mode {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mode-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.mode-select {
+    padding: 8px 16px;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mode-select:hover {
+    border-color: var(--primary-color);
+}
+
+.mode-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.ai-difficulty {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.difficulty-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.difficulty-select {
+    padding: 8px 16px;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.difficulty-select:hover {
+    border-color: var(--primary-color);
+}
+
+.difficulty-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
 .game-main {
     display: flex;
     gap: 20px;
@@ -406,6 +474,14 @@ body {
     user-select: none;
     transition: transform 0.2s ease;
     z-index: 10;
+}
+
+.piece.white {
+    color: #ffffff;
+}
+
+.piece.black {
+    color: #000000;
 }
 
 .piece:hover {
