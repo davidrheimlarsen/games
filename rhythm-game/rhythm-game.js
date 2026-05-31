@@ -83,6 +83,46 @@ class RhythmGame {
         
         document.addEventListener('keydown', (e) => this.handleKeyPress(e));
         document.addEventListener('keyup', (e) => this.handleKeyRelease(e));
+        
+        // Mobile touch controls
+        this.setupMobileControls();
+    }
+    
+    setupMobileControls() {
+        const laneButtons = document.querySelectorAll('.lane-btn');
+        
+        laneButtons.forEach(btn => {
+            const lane = parseInt(btn.dataset.lane);
+            
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (this.isPlaying && !this.isPaused) {
+                    this.hitNote(lane);
+                    this.animateLaneKey(lane, true);
+                }
+            });
+            
+            btn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.animateLaneKey(lane, false);
+            });
+            
+            // Mouse fallback for testing
+            btn.addEventListener('mousedown', (e) => {
+                if (this.isPlaying && !this.isPaused) {
+                    this.hitNote(lane);
+                    this.animateLaneKey(lane, true);
+                }
+            });
+            
+            btn.addEventListener('mouseup', (e) => {
+                this.animateLaneKey(lane, false);
+            });
+            
+            btn.addEventListener('mouseleave', (e) => {
+                this.animateLaneKey(lane, false);
+            });
+        });
     }
     
     setupAudioContext() {

@@ -671,6 +671,11 @@ kbd {
 }
 
 @media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+        min-height: 100vh;
+    }
+    
     .menu-content h1 {
         font-size: 2rem;
     }
@@ -698,17 +703,104 @@ kbd {
     }
     
     .controls-hint {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-    }
-    
-    .control {
-        font-size: 0.75rem;
+        display: none;
     }
     
     .countdown-number {
         font-size: 6rem;
     }
+}
+
+.mobile-controls {
+    display: none;
+    position: absolute;
+    bottom: 2rem;
+    left: 0;
+    right: 0;
+    padding: 0 1rem;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20;
+}
+
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: flex;
+    }
+}
+
+.d-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 60px);
+    grid-template-rows: repeat(2, 60px);
+    gap: 5px;
+}
+
+.d-pad-btn {
+    width: 60px;
+    height: 60px;
+    background: rgba(30, 41, 59, 0.9);
+    border: 2px solid rgba(148, 163, 184, 0.3);
+    border-radius: 12px;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.d-pad-btn:active {
+    background: rgba(59, 130, 246, 0.8);
+    border-color: var(--primary-color);
+    transform: scale(0.95);
+}
+
+.d-pad-btn#btn-up {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.d-pad-btn#btn-left {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.d-pad-btn#btn-right {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.d-pad-btn#btn-down {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    width: 70px;
+    height: 70px;
+    background: rgba(30, 41, 59, 0.9);
+    border: 2px solid rgba(148, 163, 184, 0.3);
+    border-radius: 50%;
+    color: white;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.action-btn:active {
+    background: rgba(239, 68, 68, 0.8);
+    border-color: var(--accent-color);
+    transform: scale(0.95);
 }

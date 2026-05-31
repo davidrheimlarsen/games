@@ -420,6 +420,11 @@ select:focus {
 }
 
 @media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+        min-height: 100vh;
+    }
+    
     .game-container {
         padding: 10px;
     }
@@ -448,4 +453,44 @@ select:focus {
     .btn {
         flex: 1;
     }
+}
+
+.mobile-controls {
+    display: none;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: flex;
+    }
+}
+
+.lane-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.lane-btn {
+    width: 70px;
+    height: 70px;
+    background: rgba(59, 130, 246, 0.9);
+    border: 2px solid rgba(148, 163, 184, 0.3);
+    border-radius: 12px;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.lane-btn:active {
+    background: rgba(139, 92, 246, 1);
+    border-color: #8b5cf6;
+    transform: scale(0.95);
 }

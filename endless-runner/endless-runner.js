@@ -147,6 +147,28 @@ class EndlessRunner {
         document.getElementById('close-shop-btn').addEventListener('click', () => {
             this.closeShop();
         });
+        
+        // Mobile touch controls
+        this.setupMobileControls();
+    }
+    
+    setupMobileControls() {
+        const btnJump = document.getElementById('btn-jump');
+        
+        if (btnJump) {
+            btnJump.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (!this.isGameOver) {
+                    this.jump();
+                }
+            });
+            
+            btnJump.addEventListener('click', (e) => {
+                if (!this.isGameOver) {
+                    this.jump();
+                }
+            });
+        }
     }
     
     setDifficulty(btn) {

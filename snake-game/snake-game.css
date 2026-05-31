@@ -390,14 +390,19 @@ body::before {
 
 /* Responsive design */
 @media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+        min-height: 100vh;
+    }
+    
     .game-container {
         padding: 10px;
         gap: 15px;
     }
     
     #game-canvas {
-        width: 400px !important;
-        height: 400px !important;
+        width: 350px !important;
+        height: 350px !important;
     }
     
     .score-display {
@@ -421,4 +426,69 @@ body::before {
         padding: 8px 16px;
         font-size: 0.8rem;
     }
+    
+    .mobile-controls {
+        display: flex;
+    }
+}
+
+.mobile-controls {
+    display: none;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: flex;
+    }
+}
+
+.d-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 60px);
+    grid-template-rows: repeat(2, 60px);
+    gap: 5px;
+}
+
+.d-pad-btn {
+    width: 60px;
+    height: 60px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 2px solid rgba(148, 163, 184, 0.3);
+    border-radius: 12px;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.d-pad-btn:active {
+    background: rgba(16, 185, 129, 0.8);
+    border-color: #10b981;
+    transform: scale(0.95);
+}
+
+.d-pad-btn#btn-up {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.d-pad-btn#btn-left {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.d-pad-btn#btn-right {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.d-pad-btn#btn-down {
+    grid-column: 2;
+    grid-row: 2;
 }

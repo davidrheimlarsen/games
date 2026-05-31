@@ -126,6 +126,71 @@ class SpaceShooter {
                 e.preventDefault();
             }
         });
+        
+        // Mobile touch controls
+        this.setupMobileControls();
+    }
+    
+    setupMobileControls() {
+        const btnUp = document.getElementById('btn-up');
+        const btnDown = document.getElementById('btn-down');
+        const btnLeft = document.getElementById('btn-left');
+        const btnRight = document.getElementById('btn-right');
+        const btnShoot = document.getElementById('btn-shoot');
+        
+        // Touch start handlers
+        const addTouchHandler = (btn, key) => {
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.keys[key] = true;
+            });
+            
+            btn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.keys[key] = false;
+            });
+            
+            // Mouse fallback for testing
+            btn.addEventListener('mousedown', (e) => {
+                this.keys[key] = true;
+            });
+            
+            btn.addEventListener('mouseup', (e) => {
+                this.keys[key] = false;
+            });
+            
+            btn.addEventListener('mouseleave', (e) => {
+                this.keys[key] = false;
+            });
+        };
+        
+        addTouchHandler(btnUp, 'arrowup');
+        addTouchHandler(btnDown, 'arrowdown');
+        addTouchHandler(btnLeft, 'arrowleft');
+        addTouchHandler(btnRight, 'arrowright');
+        
+        // Shoot button
+        btnShoot.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.keys[' '] = true;
+        });
+        
+        btnShoot.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            this.keys[' '] = false;
+        });
+        
+        btnShoot.addEventListener('mousedown', (e) => {
+            this.keys[' '] = true;
+        });
+        
+        btnShoot.addEventListener('mouseup', (e) => {
+            this.keys[' '] = false;
+        });
+        
+        btnShoot.addEventListener('mouseleave', (e) => {
+            this.keys[' '] = false;
+        });
     }
     
     handleKeyDown(e) {

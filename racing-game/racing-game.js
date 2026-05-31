@@ -152,6 +152,62 @@ class RacingGame {
         document.addEventListener('keyup', (e) => {
             this.keys[e.key] = false;
         });
+        
+        // Mobile touch controls
+        this.setupMobileControls();
+    }
+    
+    setupMobileControls() {
+        const btnUp = document.getElementById('btn-up');
+        const btnDown = document.getElementById('btn-down');
+        const btnLeft = document.getElementById('btn-left');
+        const btnRight = document.getElementById('btn-right');
+        const btnPause = document.getElementById('btn-pause');
+        
+        // Touch start handlers
+        const addTouchHandler = (btn, key) => {
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.keys[key] = true;
+            });
+            
+            btn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.keys[key] = false;
+            });
+            
+            // Mouse fallback for testing
+            btn.addEventListener('mousedown', (e) => {
+                this.keys[key] = true;
+            });
+            
+            btn.addEventListener('mouseup', (e) => {
+                this.keys[key] = false;
+            });
+            
+            btn.addEventListener('mouseleave', (e) => {
+                this.keys[key] = false;
+            });
+        };
+        
+        addTouchHandler(btnUp, 'ArrowUp');
+        addTouchHandler(btnDown, 'ArrowDown');
+        addTouchHandler(btnLeft, 'ArrowLeft');
+        addTouchHandler(btnRight, 'ArrowRight');
+        
+        // Pause button
+        btnPause.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (this.gameState === 'playing') {
+                this.togglePause();
+            }
+        });
+        
+        btnPause.addEventListener('click', (e) => {
+            if (this.gameState === 'playing') {
+                this.togglePause();
+            }
+        });
     }
     
     startRace() {
