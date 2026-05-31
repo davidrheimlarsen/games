@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paint & Draw - Creative Canvas</title>
+    <link rel="stylesheet" href="paint-draw.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="toolbar">
+            <div class="header-nav">
+                <a href="../index.html" class="home-btn">🏠 Home</a>
+            </div>
+            <div class="tool-section">
+                <h3>Tools</h3>
+                <div class="tool-buttons">
+                    <button class="tool-btn active" data-tool="brush" title="Brush">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.37l-1.34-1.34c-.39-.39-1.02-.39-1.41 0L9 12.25 11.75 15l8.96-8.96c.39-.39.39-1.02 0-1.41z"/>
+                        </svg>
+                    </button>
+                    <button class="tool-btn" data-tool="eraser" title="Eraser">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15.14 3c-.51 0-1.02.2-1.41.59L2.59 14.73c-.78.78-.78 2.05 0 2.83L5.03 20H7.66l7.57-7.57L20.59 7.07c.78-.78.78-2.05 0-2.83L16.55 3.59c-.39-.39-.9-.59-1.41-.59zM5.03 16L4 17.03 6.97 20 8 18.97 5.03 16z"/>
+                        </svg>
+                    </button>
+                    <button class="tool-btn" data-tool="line" title="Line">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 19L5 5m0 0v7m0-7h7"/>
+                        </svg>
+                    </button>
+                    <button class="tool-btn" data-tool="rectangle" title="Rectangle">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="3" y="3" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </button>
+                    <button class="tool-btn" data-tool="circle" title="Circle">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </button>
+                    <button class="tool-btn" data-tool="fill" title="Fill">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.66 7.93L12 2.27 6.34 7.93c-3.12 3.12-3.12 8.19 0 11.31C7.9 20.8 9.95 21.58 12 21.58c2.05 0 4.1-.78 5.66-2.34 3.12-3.12 3.12-8.19 0-11.31zM12 19.59c-1.6 0-3.11-.62-4.24-1.76C6.62 16.69 6 15.19 6 13.59s.62-3.11 1.76-4.24L12 5.1v14.49z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="brush-section">
+                <h3>Brush</h3>
+                <div class="brush-controls">
+                    <div class="control-group">
+                        <label for="brushSize">Size</label>
+                        <input type="range" id="brushSize" min="1" max="50" value="5">
+                        <span id="brushSizeValue">5</span>
+                    </div>
+                    <div class="control-group">
+                        <label for="brushOpacity">Opacity</label>
+                        <input type="range" id="brushOpacity" min="1" max="100" value="100">
+                        <span id="brushOpacityValue">100%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-section">
+                <h3>Colors</h3>
+                <div class="color-controls">
+                    <div class="color-palette">
+                        <div class="color-swatch active" data-color="#000000" style="background-color: #000000;"></div>
+                        <div class="color-swatch" data-color="#FF0000" style="background-color: #FF0000;"></div>
+                        <div class="color-swatch" data-color="#00FF00" style="background-color: #00FF00;"></div>
+                        <div class="color-swatch" data-color="#0000FF" style="background-color: #0000FF;"></div>
+                        <div class="color-swatch" data-color="#FFFF00" style="background-color: #FFFF00;"></div>
+                        <div class="color-swatch" data-color="#FF00FF" style="background-color: #FF00FF;"></div>
+                        <div class="color-swatch" data-color="#00FFFF" style="background-color: #00FFFF;"></div>
+                        <div class="color-swatch" data-color="#FFA500" style="background-color: #FFA500;"></div>
+                        <div class="color-swatch" data-color="#800080" style="background-color: #800080;"></div>
+                        <div class="color-swatch" data-color="#FFC0CB" style="background-color: #FFC0CB;"></div>
+                        <div class="color-swatch" data-color="#A52A2A" style="background-color: #A52A2A;"></div>
+                        <div class="color-swatch" data-color="#808080" style="background-color: #808080;"></div>
+                    </div>
+                    <div class="custom-color">
+                        <input type="color" id="colorPicker" value="#000000">
+                        <label for="colorPicker">Custom</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-section">
+                <h3>Actions</h3>
+                <div class="action-buttons">
+                    <button class="action-btn" id="undoBtn" title="Undo">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn" id="redoBtn" title="Redo">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn" id="clearBtn" title="Clear Canvas">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn" id="saveBtn" title="Save Image">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="canvas-container">
+            <canvas id="drawingCanvas"></canvas>
+            <div class="canvas-info">
+                <span id="canvasSize">800x600</span>
+                <span id="mousePos">x: 0, y: 0</span>
+            </div>
+        </main>
+
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <script src="paint-draw.js"></script>
+</body>
+</html>

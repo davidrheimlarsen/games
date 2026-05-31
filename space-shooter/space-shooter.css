@@ -573,6 +573,11 @@ body::before {
 }
 
 @media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+        min-height: 100vh;
+    }
+    
     .game-container {
         padding: 10px;
         gap: 15px;
@@ -584,8 +589,8 @@ body::before {
     }
     
     #game-canvas {
-        width: 400px !important;
-        height: 300px !important;
+        width: 350px !important;
+        height: 260px !important;
     }
     
     .score-display, .game-stats {
@@ -607,4 +612,98 @@ body::before {
         padding: 6px 12px;
         font-size: 0.8rem;
     }
+}
+
+.mobile-controls {
+    display: none;
+    position: absolute;
+    bottom: 2rem;
+    left: 0;
+    right: 0;
+    padding: 0 1rem;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20;
+}
+
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: flex;
+    }
+}
+
+.d-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 60px);
+    grid-template-rows: repeat(2, 60px);
+    gap: 5px;
+}
+
+.d-pad-btn {
+    width: 60px;
+    height: 60px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 2px solid rgba(148, 163, 184, 0.3);
+    border-radius: 12px;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.d-pad-btn:active {
+    background: rgba(139, 92, 246, 0.8);
+    border-color: #8b5cf6;
+    transform: scale(0.95);
+}
+
+.d-pad-btn#btn-up {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.d-pad-btn#btn-left {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.d-pad-btn#btn-right {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.d-pad-btn#btn-down {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    width: 70px;
+    height: 70px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 2px solid rgba(148, 163, 184, 0.3);
+    border-radius: 50%;
+    color: white;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.action-btn:active {
+    background: rgba(239, 68, 68, 0.8);
+    border-color: #ef4444;
+    transform: scale(0.95);
 }

@@ -78,6 +78,56 @@ class SnakeGame {
                 e.preventDefault();
             }
         });
+        
+        // Mobile touch controls
+        this.setupMobileControls();
+    }
+    
+    setupMobileControls() {
+        const btnUp = document.getElementById('btn-up');
+        const btnDown = document.getElementById('btn-down');
+        const btnLeft = document.getElementById('btn-left');
+        const btnRight = document.getElementById('btn-right');
+        
+        const handleDirection = (direction) => {
+            if (this.gameState !== 'playing') return;
+            
+            let newDirection = null;
+            switch(direction) {
+                case 'up':
+                    if (this.direction.y === 0) newDirection = {x: 0, y: -1};
+                    break;
+                case 'down':
+                    if (this.direction.y === 0) newDirection = {x: 0, y: 1};
+                    break;
+                case 'left':
+                    if (this.direction.x === 0) newDirection = {x: -1, y: 0};
+                    break;
+                case 'right':
+                    if (this.direction.x === 0) newDirection = {x: 1, y: 0};
+                    break;
+            }
+            
+            if (newDirection) {
+                this.nextDirection = newDirection;
+            }
+        };
+        
+        const addTouchHandler = (btn, direction) => {
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                handleDirection(direction);
+            });
+            
+            btn.addEventListener('click', (e) => {
+                handleDirection(direction);
+            });
+        };
+        
+        addTouchHandler(btnUp, 'up');
+        addTouchHandler(btnDown, 'down');
+        addTouchHandler(btnLeft, 'left');
+        addTouchHandler(btnRight, 'right');
     }
     
     handleKeyPress(e) {

@@ -267,6 +267,11 @@ body {
 }
 
 @media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+        min-height: 100vh;
+    }
+    
     .game-container {
         padding: 15px;
         gap: 15px;
@@ -296,4 +301,39 @@ body {
         flex-direction: column;
         gap: 6px;
     }
+}
+
+.mobile-controls {
+    display: none;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: flex;
+    }
+}
+
+.jump-btn {
+    width: 120px;
+    height: 60px;
+    background: rgba(59, 130, 246, 0.9);
+    border: 2px solid rgba(148, 163, 184, 0.3);
+    border-radius: 12px;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.jump-btn:active {
+    background: rgba(59, 130, 246, 1);
+    border-color: #3b82f6;
+    transform: scale(0.95);
 }

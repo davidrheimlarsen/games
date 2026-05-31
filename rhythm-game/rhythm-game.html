@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhythm Game - Beat Master</title>
+    <link rel="stylesheet" href="rhythm-game.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <div class="header-nav">
+                <a href="../index.html" class="home-btn">🏠 Home</a>
+            </div>
+            <div class="score-container">
+                <div class="score-label">Score</div>
+                <div class="score" id="score">0</div>
+            </div>
+            <div class="combo-container">
+                <div class="combo-label">Combo</div>
+                <div class="combo" id="combo">0x</div>
+            </div>
+            <div class="accuracy-container">
+                <div class="accuracy-label">Accuracy</div>
+                <div class="accuracy" id="accuracy">100%</div>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="track-container">
+                <div class="track" data-lane="0">
+                    <div class="hit-zone"></div>
+                    <div class="lane-key">D</div>
+                </div>
+                <div class="track" data-lane="1">
+                    <div class="hit-zone"></div>
+                    <div class="lane-key">F</div>
+                </div>
+                <div class="track" data-lane="2">
+                    <div class="hit-zone"></div>
+                    <div class="lane-key">J</div>
+                </div>
+                <div class="track" data-lane="3">
+                    <div class="hit-zone"></div>
+                    <div class="lane-key">K</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mobile-controls" id="mobileControls">
+            <div class="lane-buttons">
+                <button class="lane-btn" data-lane="0">D</button>
+                <button class="lane-btn" data-lane="1">F</button>
+                <button class="lane-btn" data-lane="2">J</button>
+                <button class="lane-btn" data-lane="3">K</button>
+            </div>
+        </div>
+
+        <div class="game-controls">
+            <div class="song-selector">
+                <label for="songSelect">Choose Song:</label>
+                <select id="songSelect">
+                    <option value="electronic">Electronic Beat</option>
+                    <option value="rock">Rock Anthem</option>
+                    <option value="classical">Classical Symphony</option>
+                </select>
+            </div>
+            <div class="difficulty-selector">
+                <label for="difficultySelect">Difficulty:</label>
+                <select id="difficultySelect">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+            <div class="control-buttons">
+                <button id="startBtn" class="btn btn-primary">Start Game</button>
+                <button id="pauseBtn" class="btn btn-secondary" disabled>Pause</button>
+                <button id="resetBtn" class="btn btn-secondary">Reset</button>
+            </div>
+        </div>
+
+        <div class="game-over-modal" id="gameOverModal">
+            <div class="modal-content">
+                <h2>Game Over!</h2>
+                <div class="final-stats">
+                    <div class="stat">
+                        <span class="stat-label">Final Score:</span>
+                        <span class="stat-value" id="finalScore">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Max Combo:</span>
+                        <span class="stat-value" id="maxCombo">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Accuracy:</span>
+                        <span class="stat-value" id="finalAccuracy">0%</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Perfect Hits:</span>
+                        <span class="stat-value" id="perfectHits">0</span>
+                    </div>
+                </div>
+                <button id="playAgainBtn" class="btn btn-primary">Play Again</button>
+            </div>
+        </div>
+
+        <div class="judgment-display" id="judgmentDisplay"></div>
+    </div>
+
+    <script src="rhythm-game.js"></script>
+</body>
+</html>
