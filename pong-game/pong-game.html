@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%233b82f6' d='M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/%3E%3C/svg%3E">
+    <title>Pong</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="pong-game.css">
+</head>
+<body>
+    <nav class="page-nav"><a href="../index.html">← Home</a></nav>
+    <div class="game-container">
+        <div class="score-display">
+            <div class="player-score">
+                <span class="score-label">Player</span>
+                <span class="score-value" id="player-score">0</span>
+            </div>
+            <div class="ai-score">
+                <span class="score-label">AI</span>
+                <span class="score-value" id="ai-score">0</span>
+            </div>
+        </div>
+        
+        <canvas id="game-canvas" width="800" height="500"></canvas>
+        
+        <div class="game-stats" id="game-stats">
+            <span class="difficulty" id="difficulty-display">Difficulty: Medium</span>
+            <span class="round" id="round-display">Round: 1</span>
+        </div>
+
+        <div class="mobile-controls" id="mobileControls">
+            <div class="touch-area" id="touch-area">
+                <span class="touch-hint">Touch and drag to move paddle</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="game-over-overlay">
+        <div class="game-over-modal">
+            <h2 class="game-over-title" id="winner-text">Game Over</h2>
+            <div class="final-score" id="final-score">0 - 0</div>
+            <p class="final-score-label">Final Score</p>
+            <p class="reason" id="game-over-reason">First to 5 wins!</p>
+            <button class="play-again-btn" id="play-again-btn">Play Again</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="pause-overlay">
+        <div class="pause-modal">
+            <h2 class="pause-title">Game Paused</h2>
+            <p class="pause-instructions">Press ESC or P to Resume</p>
+            <button class="resume-btn" id="resume-btn">Resume</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="start-overlay">
+        <div class="start-modal">
+            <h2 class="start-title">Pong</h2>
+            <p class="start-instructions">Use Mouse or Arrow Keys to Move Paddle</p>
+            <p class="start-instructions">First to 5 points wins!</p>
+            <p class="start-instructions">Press ESC or P to Pause</p>
+            
+            <div class="difficulty-section">
+                <span class="difficulty-label">Select Difficulty:</span>
+                <div class="difficulty-buttons">
+                    <button class="difficulty-btn" data-difficulty="easy">Easy</button>
+                    <button class="difficulty-btn selected" data-difficulty="medium">Medium</button>
+                    <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+                    <button class="difficulty-btn" data-difficulty="impossible">Impossible</button>
+                </div>
+            </div>
+            
+            <button class="start-btn" id="start-btn">Start Game</button>
+        </div>
+    </div>
+
+    <script src="pong-game.js" defer></script>
+</body>
+</html>
