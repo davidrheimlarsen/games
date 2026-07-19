@@ -102,7 +102,8 @@ class ChessGame {
         
         // Promotion pieces
         document.querySelectorAll('.promotion-piece').forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const piece = btn.dataset.piece;
                 this.completePromotion(piece);
             });
@@ -237,7 +238,7 @@ class ChessGame {
         // Check piece-specific movement rules
         let isValid = false;
         
-        switch (piece.type) {
+        switch (piece.type.toUpperCase()) {
             case 'P':
                 isValid = this.isValidPawnMove(fromRow, fromCol, toRow, toCol);
                 break;
@@ -403,7 +404,7 @@ class ChessGame {
         for (let row = 0; row < 8; row++) {
             for (let col = 0; col < 8; col++) {
                 const piece = this.board[row][col];
-                if (piece && piece.type === 'K' && piece.color === color) {
+                if (piece && piece.type.toUpperCase() === 'K' && piece.color === color) {
                     kingRow = row;
                     kingCol = col;
                     break;
@@ -435,7 +436,7 @@ class ChessGame {
         
         let canAttack = false;
         
-        switch (piece.type) {
+        switch (piece.type.toUpperCase()) {
             case 'P':
                 const direction = piece.color === 'white' ? -1 : 1;
                 canAttack = Math.abs(fromCol - toCol) === 1 && toRow === fromRow + direction;
@@ -475,7 +476,7 @@ class ChessGame {
         }
         
         // Handle en passant capture
-        if (piece.type === 'P' && this.enPassantTarget && 
+        if (piece.type.toUpperCase() === 'P' && this.enPassantTarget && 
             toRow === this.enPassantTarget.row && toCol === this.enPassantTarget.col) {
             const capturedPawn = this.board[fromRow][toCol];
             this.capturedPieces[capturedPawn.color].push(capturedPawn.type);
@@ -484,7 +485,7 @@ class ChessGame {
         
         // Update en passant target
         this.enPassantTarget = null;
-        if (piece.type === 'P' && Math.abs(toRow - fromRow) === 2) {
+        if (piece.type.toUpperCase() === 'P' && Math.abs(toRow - fromRow) === 2) {
             this.enPassantTarget = {
                 row: (fromRow + toRow) / 2,
                 col: fromCol
@@ -492,7 +493,7 @@ class ChessGame {
         }
         
         // Handle castling
-        if (piece.type === 'K' && Math.abs(toCol - fromCol) === 2) {
+        if (piece.type.toUpperCase() === 'K' && Math.abs(toCol - fromCol) === 2) {
             const kingside = toCol > fromCol;
             const rookFromCol = kingside ? 7 : 0;
             const rookToCol = kingside ? toCol - 1 : toCol + 1;
@@ -502,11 +503,11 @@ class ChessGame {
         }
         
         // Update castling rights
-        if (piece.type === 'K') {
+        if (piece.type.toUpperCase() === 'K') {
             this.castlingRights[piece.color].kingside = false;
             this.castlingRights[piece.color].queenside = false;
         }
-        if (piece.type === 'R') {
+        if (piece.type.toUpperCase() === 'R') {
             if (fromCol === 0) this.castlingRights[piece.color].queenside = false;
             if (fromCol === 7) this.castlingRights[piece.color].kingside = false;
         }
@@ -526,7 +527,7 @@ class ChessGame {
         });
         
         // Check for pawn promotion
-        if (piece.type === 'P' && (toRow === 0 || toRow === 7)) {
+        if (piece.type.toUpperCase() === 'P' && (toRow === 0 || toRow === 7)) {
             this.promotionPending = { row: toRow, col: toCol, color: piece.color };
             this.showPromotionModal();
             return;
@@ -540,9 +541,18 @@ class ChessGame {
         const pieces = modal.querySelectorAll('.promotion-piece');
         const color = this.promotionPending.color;
         
+        const pieceNameToLetter = {
+            'queen': 'Q',
+            'rook': 'R', 
+            'bishop': 'B',
+            'knight': 'N'
+        };
+        
         pieces.forEach(btn => {
-            const piece = btn.dataset.piece;
-            btn.textContent = this.pieces[color === 'white' ? piece.toUpperCase() : piece];
+            const pieceName = btn.dataset.piece;
+            const pieceLetter = pieceNameToLetter[pieceName];
+            const symbol = this.pieceSymbols[color][pieceLetter];
+            btn.textContent = symbol;
         });
         
         modal.classList.add('active');
@@ -550,7 +560,16 @@ class ChessGame {
     
     completePromotion(pieceType) {
         const { row, col, color } = this.promotionPending;
-        this.board[row][col] = { type: pieceType.toUpperCase(), color };
+        
+        const pieceNameToLetter = {
+            'queen': 'Q',
+            'rook': 'R', 
+            'bishop': 'B',
+            'knight': 'N'
+        };
+        
+        const pieceLetter = pieceNameToLetter[pieceType];
+        this.board[row][col] = { type: pieceLetter, color };
         
         document.getElementById('promotionModal').classList.remove('active');
         this.promotionPending = null;
@@ -605,9 +624,9 @@ class ChessGame {
     getMoveNotation(piece, fromRow, fromCol, toRow, toCol, captured) {
         const files = 'abcdefgh';
         const ranks = '87654321';
-        const pieceSymbol = piece.type === 'P' ? '' : piece.type;
+        const pieceSymbol = piece.type.toUpperCase() === 'P' ? '' : piece.type.toUpperCase();
         const captureSymbol = captured ? 'x' : '';
-        const from = piece.type === 'P' && captured ? files[fromCol] : '';
+        const from = piece.type.toUpperCase() === 'P' && captured ? files[fromCol] : '';
         const to = files[toCol] + ranks[toRow];
         
         return pieceSymbol + from + captureSymbol + to;
@@ -706,7 +725,7 @@ class ChessGame {
         for (let row = 0; row < 8; row++) {
             for (let col = 0; col < 8; col++) {
                 const piece = this.board[row][col];
-                if (piece && piece.type === 'K' && piece.color === this.currentPlayer) {
+                if (piece && piece.type.toUpperCase() === 'K' && piece.color === this.currentPlayer) {
                     const square = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
                     square.classList.add('check');
                     return;
@@ -777,7 +796,7 @@ class ChessGame {
             for (let col = 0; col < 8; col++) {
                 const piece = this.board[row][col];
                 if (piece) {
-                    const value = this.pieceValues[piece.type];
+                    const value = this.pieceValues[piece.type.toUpperCase()];
                     const positionBonus = this.positionBonus[row][col];
                     
                     if (piece.color === 'white') {
