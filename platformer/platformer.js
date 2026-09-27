@@ -166,7 +166,7 @@ class Platformer {
         // Reset player
         this.player = {
             x: 50,
-            y: 350,
+            y: 400,
             width: 40,
             height: 40,
             velocityX: 0,
@@ -251,7 +251,7 @@ class Platformer {
         });
         
         // Enemy movement and collision
-        this.enemies.forEach(enemy => {
+        this.enemies = this.enemies.filter(enemy => {
             enemy.x += enemy.speed * enemy.direction;
             
             // Bounce off platform edges
@@ -263,14 +263,15 @@ class Platformer {
             if (this.checkCollision(this.player, enemy)) {
                 // If player is above enemy, kill enemy
                 if (this.player.velocityY > 0 && this.player.y + this.player.height < enemy.y + enemy.height / 2) {
-                    enemy.speed = 0;
                     this.score += 20;
                     this.createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, 15, '#ff4444');
                     this.updateUI();
+                    return false; // Remove enemy
                 } else {
                     this.loseLife();
                 }
             }
+            return true; // Keep enemy
         });
         
         // Flag collision (level complete)
@@ -318,7 +319,7 @@ class Platformer {
         } else {
             // Reset player position
             this.player.x = 50;
-            this.player.y = 350;
+            this.player.y = 400;
             this.player.velocityX = 0;
             this.player.velocityY = 0;
         }

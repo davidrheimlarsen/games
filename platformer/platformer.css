@@ -108,7 +108,7 @@ button:hover {
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
-.startscreen.hidden,
+.start-screen.hidden,
 .game-over.hidden,
 .level-complete.hidden {
     display: none;
