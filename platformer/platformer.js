@@ -13,6 +13,16 @@ class Platformer {
         this.lives = 3;
         this.level = 1;
         this.gameRunning = false;
+        this.totalLevels = 15;
+        this.unlockedLevels = parseInt(localStorage.getItem('platformerUnlockedLevels')) || 1;
+        this.completedLevels = JSON.parse(localStorage.getItem('platformerCompletedLevels')) || [];
+        this.coinBalance = parseInt(localStorage.getItem('platformerCoinBalance')) || 0;
+        this.extraLives = parseInt(localStorage.getItem('platformerExtraLives')) || 0;
+        this.activePowerups = {
+            speed: false,
+            jump: false,
+            shield: false
+        };
         
         this.keys = {
             left: false,
@@ -36,7 +46,15 @@ class Platformer {
         
         document.getElementById('startBtn').addEventListener('click', () => this.startGame());
         document.getElementById('restartBtn').addEventListener('click', () => this.restartGame());
-        document.getElementById('nextLevelBtn').addEventListener('click', () => this.nextLevel());
+        document.getElementById('levelSelectBtn').addEventListener('click', () => this.showLevelSelect());
+        document.getElementById('backToMenuBtn').addEventListener('click', () => this.backToMenu());
+        document.getElementById('shopBtn').addEventListener('click', () => this.openShop());
+        document.getElementById('closeShopBtn').addEventListener('click', () => this.closeShop());
+        
+        // Shop buy buttons
+        document.querySelectorAll('.buy-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => this.buyItem(e.target.dataset.item));
+        });
     }
     
     handleKeyDown(e) {
@@ -57,7 +75,9 @@ class Platformer {
     startGame() {
         document.getElementById('startScreen').classList.add('hidden');
         this.score = 0;
-        this.lives = 3;
+        this.lives = 3 + this.extraLives;
+        this.extraLives = 0;
+        localStorage.setItem('platformerExtraLives', 0);
         this.level = 1;
         this.updateUI();
         this.loadLevel(1);
@@ -70,13 +90,118 @@ class Platformer {
         this.startGame();
     }
     
-    nextLevel() {
+    showLevelSelect() {
         document.getElementById('levelComplete').classList.add('hidden');
-        this.level++;
+        this.updateCoinBalance();
+        this.generateLevelGrid();
+        document.getElementById('levelSelect').classList.remove('hidden');
+    }
+    
+    openShop() {
+        this.updateCoinBalance();
+        document.getElementById('shop').classList.remove('hidden');
+        this.updateShopButtons();
+    }
+    
+    closeShop() {
+        document.getElementById('shop').classList.add('hidden');
+    }
+    
+    updateCoinBalance() {
+        document.getElementById('coinBalance').textContent = this.coinBalance;
+        document.getElementById('shopCoinBalance').textContent = this.coinBalance;
+    }
+    
+    updateShopButtons() {
+        const prices = {
+            life: 50,
+            speed: 100,
+            jump: 100,
+            shield: 150
+        };
+        
+        document.querySelectorAll('.buy-btn').forEach(btn => {
+            const item = btn.dataset.item;
+            btn.disabled = this.coinBalance < prices[item];
+        });
+    }
+    
+    buyItem(item) {
+        const prices = {
+            life: 50,
+            speed: 100,
+            jump: 100,
+            shield: 150
+        };
+        
+        if (this.coinBalance >= prices[item]) {
+            this.coinBalance -= prices[item];
+            localStorage.setItem('platformerCoinBalance', this.coinBalance);
+            
+            switch(item) {
+                case 'life':
+                    this.extraLives++;
+                    localStorage.setItem('platformerExtraLives', this.extraLives);
+                    break;
+                case 'speed':
+                case 'jump':
+                case 'shield':
+                    this.activePowerups[item] = true;
+                    break;
+            }
+            
+            this.updateCoinBalance();
+            this.updateShopButtons();
+        }
+    }
+    
+    backToMenu() {
+        document.getElementById('levelSelect').classList.add('hidden');
+        document.getElementById('startScreen').classList.remove('hidden');
+    }
+    
+    generateLevelGrid() {
+        const grid = document.getElementById('levelGrid');
+        grid.innerHTML = '';
+        
+        for (let i = 1; i <= this.totalLevels; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'level-btn';
+            btn.textContent = i;
+            
+            if (i <= this.unlockedLevels) {
+                btn.classList.add('unlocked');
+                if (this.completedLevels.includes(i)) {
+                    btn.classList.add('completed');
+                }
+                btn.addEventListener('click', () => this.selectLevel(i));
+            } else {
+                btn.classList.add('locked');
+            }
+            
+            grid.appendChild(btn);
+        }
+    }
+    
+    selectLevel(levelNum) {
+        document.getElementById('levelSelect').classList.add('hidden');
+        this.score = 0;
+        this.lives = 3 + this.extraLives;
+        this.extraLives = 0;
+        localStorage.setItem('platformerExtraLives', 0);
+        this.level = levelNum;
         this.updateUI();
-        this.loadLevel(this.level);
+        this.loadLevel(levelNum);
         this.gameRunning = true;
         this.gameLoop();
+    }
+    
+    resetPowerups() {
+        this.activePowerups = {
+            speed: false,
+            jump: false,
+            shield: false
+        };
     }
     
     loadLevel(levelNum) {
@@ -116,10 +241,122 @@ class Platformer {
                 { x: 680, y: 150, width: 80, height: 20 },
                 { x: 400, y: 150, width: 100, height: 20 },
                 { x: 200, y: 200, width: 100, height: 20 }
+            ],
+            // Level 4
+            [
+                { x: 120, y: 370, width: 120, height: 20 },
+                { x: 280, y: 310, width: 120, height: 20 },
+                { x: 440, y: 250, width: 120, height: 20 },
+                { x: 600, y: 190, width: 120, height: 20 },
+                { x: 700, y: 130, width: 100, height: 20 }
+            ],
+            // Level 5
+            [
+                { x: 60, y: 390, width: 90, height: 20 },
+                { x: 180, y: 340, width: 90, height: 20 },
+                { x: 300, y: 290, width: 90, height: 20 },
+                { x: 420, y: 240, width: 90, height: 20 },
+                { x: 540, y: 190, width: 90, height: 20 },
+                { x: 660, y: 140, width: 90, height: 20 },
+                { x: 550, y: 90, width: 120, height: 20 }
+            ],
+            // Level 6
+            [
+                { x: 100, y: 360, width: 130, height: 20 },
+                { x: 260, y: 300, width: 130, height: 20 },
+                { x: 420, y: 240, width: 130, height: 20 },
+                { x: 580, y: 180, width: 130, height: 20 },
+                { x: 400, y: 120, width: 130, height: 20 },
+                { x: 200, y: 180, width: 130, height: 20 }
+            ],
+            // Level 7
+            [
+                { x: 70, y: 380, width: 100, height: 20 },
+                { x: 200, y: 330, width: 100, height: 20 },
+                { x: 330, y: 280, width: 100, height: 20 },
+                { x: 460, y: 230, width: 100, height: 20 },
+                { x: 590, y: 180, width: 100, height: 20 },
+                { x: 720, y: 130, width: 80, height: 20 }
+            ],
+            // Level 8
+            [
+                { x: 90, y: 370, width: 110, height: 20 },
+                { x: 230, y: 310, width: 110, height: 20 },
+                { x: 370, y: 250, width: 110, height: 20 },
+                { x: 510, y: 190, width: 110, height: 20 },
+                { x: 650, y: 130, width: 110, height: 20 },
+                { x: 500, y: 80, width: 100, height: 20 }
+            ],
+            // Level 9
+            [
+                { x: 30, y: 420, width: 150, height: 20 },
+                { x: 200, y: 360, width: 120, height: 20 },
+                { x: 340, y: 300, width: 120, height: 20 },
+                { x: 480, y: 240, width: 120, height: 20 },
+                { x: 620, y: 180, width: 120, height: 20 },
+                { x: 720, y: 120, width: 80, height: 20 }
+            ],
+            // Level 10
+            [
+                { x: 50, y: 380, width: 200, height: 20 },
+                { x: 280, y: 320, width: 200, height: 20 },
+                { x: 510, y: 260, width: 200, height: 20 },
+                { x: 650, y: 200, width: 150, height: 20 }
+            ],
+            // Level 11
+            [
+                { x: 80, y: 390, width: 90, height: 20 },
+                { x: 200, y: 350, width: 90, height: 20 },
+                { x: 320, y: 310, width: 90, height: 20 },
+                { x: 440, y: 270, width: 90, height: 20 },
+                { x: 560, y: 230, width: 90, height: 20 },
+                { x: 680, y: 190, width: 90, height: 20 },
+                { x: 600, y: 130, width: 90, height: 20 },
+                { x: 450, y: 90, width: 90, height: 20 }
+            ],
+            // Level 12
+            [
+                { x: 100, y: 370, width: 120, height: 20 },
+                { x: 250, y: 310, width: 120, height: 20 },
+                { x: 400, y: 250, width: 120, height: 20 },
+                { x: 550, y: 190, width: 120, height: 20 },
+                { x: 700, y: 130, width: 100, height: 20 },
+                { x: 580, y: 80, width: 100, height: 20 }
+            ],
+            // Level 13
+            [
+                { x: 60, y: 380, width: 100, height: 20 },
+                { x: 190, y: 330, width: 100, height: 20 },
+                { x: 320, y: 280, width: 100, height: 20 },
+                { x: 450, y: 230, width: 100, height: 20 },
+                { x: 580, y: 180, width: 100, height: 20 },
+                { x: 710, y: 130, width: 90, height: 20 },
+                { x: 620, y: 70, width: 90, height: 20 }
+            ],
+            // Level 14
+            [
+                { x: 90, y: 360, width: 110, height: 20 },
+                { x: 230, y: 300, width: 110, height: 20 },
+                { x: 370, y: 240, width: 110, height: 20 },
+                { x: 510, y: 180, width: 110, height: 20 },
+                { x: 650, y: 120, width: 110, height: 20 },
+                { x: 520, y: 70, width: 110, height: 20 },
+                { x: 350, y: 120, width: 110, height: 20 }
+            ],
+            // Level 15
+            [
+                { x: 70, y: 390, width: 80, height: 20 },
+                { x: 170, y: 350, width: 80, height: 20 },
+                { x: 270, y: 310, width: 80, height: 20 },
+                { x: 370, y: 270, width: 80, height: 20 },
+                { x: 470, y: 230, width: 80, height: 20 },
+                { x: 570, y: 190, width: 80, height: 20 },
+                { x: 670, y: 150, width: 80, height: 20 },
+                { x: 770, y: 110, width: 30, height: 20 }
             ]
         ];
         
-        const designIndex = (levelNum - 1) % levelDesigns.length;
+        const designIndex = levelNum - 1;
         const platforms = levelDesigns[designIndex];
         
         platforms.forEach(p => {
@@ -171,10 +408,11 @@ class Platformer {
             height: 40,
             velocityX: 0,
             velocityY: 0,
-            speed: 5,
-            jumpForce: 12,
+            speed: this.activePowerups.speed ? 7 : 5,
+            jumpForce: this.activePowerups.jump ? 15 : 12,
             grounded: false,
-            color: '#ff6b6b'
+            color: '#ff6b6b',
+            hasShield: this.activePowerups.shield
         };
     }
     
@@ -267,6 +505,13 @@ class Platformer {
                     this.createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, 15, '#ff4444');
                     this.updateUI();
                     return false; // Remove enemy
+                } else if (this.player.hasShield) {
+                    // Shield destroys enemy
+                    this.player.hasShield = false;
+                    this.createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, 15, '#667eea');
+                    this.score += 20;
+                    this.updateUI();
+                    return false; // Remove enemy
                 } else {
                     this.loseLife();
                 }
@@ -311,6 +556,18 @@ class Platformer {
     }
     
     loseLife() {
+        // Check for shield
+        if (this.player.hasShield) {
+            this.player.hasShield = false;
+            this.createParticles(this.player.x + this.player.width / 2, this.player.y + this.player.height / 2, 20, '#667eea');
+            // Reset player position
+            this.player.x = 50;
+            this.player.y = 400;
+            this.player.velocityX = 0;
+            this.player.velocityY = 0;
+            return;
+        }
+        
         this.lives--;
         this.updateUI();
         
@@ -334,7 +591,29 @@ class Platformer {
     levelComplete() {
         this.gameRunning = false;
         this.score += 50; // Bonus for completing level
+        this.coinBalance += Math.floor(this.score / 10); // Convert score to coins
+        localStorage.setItem('platformerCoinBalance', this.coinBalance);
         this.updateUI();
+        
+        // Mark level as completed
+        if (!this.completedLevels.includes(this.level)) {
+            this.completedLevels.push(this.level);
+            localStorage.setItem('platformerCompletedLevels', JSON.stringify(this.completedLevels));
+        }
+        
+        // Unlock next level
+        if (this.level >= this.unlockedLevels && this.unlockedLevels < this.totalLevels) {
+            this.unlockedLevels = this.level + 1;
+            localStorage.setItem('platformerUnlockedLevels', this.unlockedLevels);
+        }
+        
+        // Reset powerups after level (they last for 1 level)
+        this.activePowerups = {
+            speed: false,
+            jump: false,
+            shield: false
+        };
+        
         document.getElementById('levelScore').textContent = this.score;
         document.getElementById('levelComplete').classList.remove('hidden');
     }
@@ -400,6 +679,15 @@ class Platformer {
         // Draw player
         this.ctx.fillStyle = this.player.color;
         this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
+        
+        // Draw shield if active
+        if (this.player.hasShield) {
+            this.ctx.strokeStyle = '#667eea';
+            this.ctx.lineWidth = 3;
+            this.ctx.strokeRect(this.player.x - 3, this.player.y - 3, this.player.width + 6, this.player.height + 6);
+            this.ctx.lineWidth = 1;
+        }
+        
         // Player eyes
         this.ctx.fillStyle = '#ffffff';
         this.ctx.fillRect(this.player.x + 8, this.player.y + 10, 8, 8);

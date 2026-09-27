@@ -32,7 +32,49 @@
         <div class="level-complete hidden" id="levelComplete">
             <h1>Level Complete!</h1>
             <p>Score: <span id="levelScore">0</span></p>
-            <button id="nextLevelBtn">Next Level</button>
+            <button id="levelSelectBtn">Select Level</button>
+        </div>
+        
+        <div class="level-select hidden" id="levelSelect">
+            <h1>Select Level</h1>
+            <div class="coin-balance">Coins: <span id="coinBalance">0</span></div>
+            <div class="level-grid" id="levelGrid"></div>
+            <div class="level-select-buttons">
+                <button id="shopBtn">Shop</button>
+                <button id="backToMenuBtn">Back to Menu</button>
+            </div>
+        </div>
+        
+        <div class="shop hidden" id="shop">
+            <h1>Shop</h1>
+            <div class="coin-balance">Coins: <span id="shopCoinBalance">0</span></div>
+            <div class="shop-items">
+                <div class="shop-item">
+                    <h3>Extra Life</h3>
+                    <p>Start with +1 life</p>
+                    <p class="price">Cost: 50 coins</p>
+                    <button class="buy-btn" data-item="life">Buy</button>
+                </div>
+                <div class="shop-item">
+                    <h3>Speed Boost</h3>
+                    <p>Move faster for 1 level</p>
+                    <p class="price">Cost: 100 coins</p>
+                    <button class="buy-btn" data-item="speed">Buy</button>
+                </div>
+                <div class="shop-item">
+                    <h3>Jump Boost</h3>
+                    <p>Jump higher for 1 level</p>
+                    <p class="price">Cost: 100 coins</p>
+                    <button class="buy-btn" data-item="jump">Buy</button>
+                </div>
+                <div class="shop-item">
+                    <h3>Shield</h3>
+                    <p>Survive one hit for 1 level</p>
+                    <p class="price">Cost: 150 coins</p>
+                    <button class="buy-btn" data-item="shield">Buy</button>
+                </div>
+            </div>
+            <button id="closeShopBtn">Close</button>
         </div>
         
         <div class="controls-info">
