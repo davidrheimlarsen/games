@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platformer</title>
+    <link rel="stylesheet" href="platformer.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="ui">
+            <div class="score">Score: <span id="score">0</span></div>
+            <div class="lives">Lives: <span id="lives">3</span></div>
+            <div class="level">Level: <span id="level">1</span></div>
+        </div>
+        
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="start-screen" id="startScreen">
+            <h1>Platformer</h1>
+            <p>Use arrow keys or WASD to move and jump</p>
+            <p>Collect coins, avoid enemies, reach the flag!</p>
+            <button id="startBtn">Start Game</button>
+        </div>
+        
+        <div class="game-over" id="gameOver">
+            <h1>Game Over!</h1>
+            <p>Final Score: <span id="finalScore">0</span></p>
+            <button id="restartBtn">Try Again</button>
+        </div>
+        
+        <div class="level-complete" id="levelComplete">
+            <h1>Level Complete!</h1>
+            <p>Score: <span id="levelScore">0</span></p>
+            <button id="nextLevelBtn">Next Level</button>
+        </div>
+        
+        <div class="controls-info">
+            <div class="key">← → or A D</div>
+            <div class="key">↑ or W or Space</div>
+        </div>
+    </div>
+    
+    <script src="platformer.js"></script>
+</body>
+</html>
