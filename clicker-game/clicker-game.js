@@ -7,6 +7,7 @@ class ClickerGame {
         this.radioEnabled = false;
         this.currentSong = 0;
         this.backgroundIndex = 0;
+        this.activeCursor = 'default';
         this.audioContext = null;
         this.rainSound = null;
         this.radioSound = null;
@@ -112,6 +113,12 @@ class ClickerGame {
         this.cosmeticUpgrades = [
             { id: 'rain', name: '🌧️ Rain Effect', cost: 200, initialCost: 200, purchased: false, type: 'toggle' },
             { id: 'radio', name: '📻 Calming Radio', cost: 500, initialCost: 500, purchased: false, type: 'toggle' },
+            { id: 'cursor_glitch', name: '👾 Glitched Cursor', cost: 750, initialCost: 750, purchased: false, type: 'cursor', cursor: 'glitch' },
+            { id: 'cursor_cheese', name: '🧀 Cheese Cursor', cost: 1000, initialCost: 1000, purchased: false, type: 'cursor', cursor: 'cheese' },
+            { id: 'cursor_fire', name: '🔥 Fire Cursor', cost: 1500, initialCost: 1500, purchased: false, type: 'cursor', cursor: 'fire' },
+            { id: 'cursor_ice', name: '❄️ Ice Cursor', cost: 2000, initialCost: 2000, purchased: false, type: 'cursor', cursor: 'ice' },
+            { id: 'cursor_rainbow', name: '🌈 Rainbow Cursor', cost: 3000, initialCost: 3000, purchased: false, type: 'cursor', cursor: 'rainbow' },
+            { id: 'cursor_diamond', name: '💎 Diamond Cursor', cost: 5000, initialCost: 5000, purchased: false, type: 'cursor', cursor: 'diamond' },
             { id: 'bg1', name: '🎨 Sunset Theme', cost: 1000, initialCost: 1000, purchased: false, type: 'background', background: 'sunset' },
             { id: 'bg2', name: '🎨 Ocean Theme', cost: 2500, initialCost: 2500, purchased: false, type: 'background', background: 'ocean' },
             { id: 'bg3', name: '🎨 Forest Theme', cost: 5000, initialCost: 5000, purchased: false, type: 'background', background: 'forest' },
@@ -251,13 +258,16 @@ class ClickerGame {
                     statusText = '✓ Purchased';
                     effectText = 'Click to Enable';
                 }
+            } else if (upgrade.type === 'cursor') {
+                statusText = this.activeCursor === upgrade.cursor ? '✓ Active' : '✓ Purchased';
+                effectText = 'Click to Equip';
             } else {
                 statusText = '✓ Purchased';
                 effectText = upgrade.type === 'toggle' ? 'Click to Enable' : 'Change Background';
             }
         } else {
             statusText = '💰 ' + this.formatNumber(upgrade.cost);
-            effectText = upgrade.type === 'toggle' ? 'Toggle Effect' : 'Change Background';
+            effectText = upgrade.type === 'toggle' ? 'Toggle Effect' : upgrade.type === 'cursor' ? 'Custom Cursor' : 'Change Background';
         }
 
         element.innerHTML = `
@@ -310,6 +320,8 @@ class ClickerGame {
                 this.toggleCosmetic(upgrade);
             } else if (upgrade.type === 'background') {
                 this.setBackground(upgrade.background);
+            } else if (upgrade.type === 'cursor') {
+                this.setCursor(upgrade.cursor);
             }
             return;
         }
@@ -323,6 +335,8 @@ class ClickerGame {
             this.toggleCosmetic(upgrade);
         } else if (upgrade.type === 'background') {
             this.setBackground(upgrade.background);
+        } else if (upgrade.type === 'cursor') {
+            this.setCursor(upgrade.cursor);
         }
 
         this.renderUpgrades();
@@ -478,6 +492,14 @@ class ClickerGame {
         document.body.style.background = this.backgrounds[backgroundName];
     }
 
+    setCursor(cursorName) {
+        this.activeCursor = cursorName;
+        document.body.classList.remove('cursor-glitch', 'cursor-cheese', 'cursor-fire', 'cursor-ice', 'cursor-rainbow', 'cursor-diamond');
+        if (cursorName !== 'default') {
+            document.body.classList.add('cursor-' + cursorName);
+        }
+    }
+
     checkUpgradeAvailability() {
         document.querySelectorAll('.upgrade-item').forEach(element => {
             const id = element.dataset.id;
@@ -541,6 +563,7 @@ class ClickerGame {
             radioEnabled: this.radioEnabled,
             currentSong: this.currentSong,
             backgroundIndex: this.backgroundIndex,
+            activeCursor: this.activeCursor,
             clickUpgrades: this.clickUpgrades.map(u => ({ id: u.id, level: u.level, cost: u.cost })),
             autoUpgrades: this.autoUpgrades.map(u => ({ id: u.id, level: u.level, cost: u.cost })),
             cosmeticUpgrades: this.cosmeticUpgrades.map(u => ({ id: u.id, purchased: u.purchased }))
@@ -560,6 +583,7 @@ class ClickerGame {
             this.radioEnabled = data.radioEnabled || false;
             this.currentSong = data.currentSong || 0;
             this.backgroundIndex = data.backgroundIndex || 'default';
+            this.activeCursor = data.activeCursor || 'default';
 
             if (data.clickUpgrades) {
                 data.clickUpgrades.forEach(saved => {
@@ -594,6 +618,10 @@ class ClickerGame {
                 this.setBackground(this.backgroundIndex);
             }
 
+            if (this.activeCursor !== 'default') {
+                this.setCursor(this.activeCursor);
+            }
+
             if (this.rainEnabled) {
                 this.toggleRain(true);
             }
@@ -614,10 +642,12 @@ class ClickerGame {
             this.radioEnabled = false;
             this.currentSong = 0;
             this.backgroundIndex = 'default';
+            this.activeCursor = 'default';
 
             this.toggleRain(false);
             this.toggleRadio(false);
             this.setBackground('default');
+            this.setCursor('default');
 
             this.clickUpgrades.forEach(u => {
                 u.level = 0;
