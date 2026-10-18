@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%233b82f6' d='M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/%3E%3C/svg%3E">
+    <title>Doodle Jump</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="doodle-jump.css">
+</head>
+<body>
+    <header class="game-header">
+        <div class="header-nav">
+            <a href="../index.html" class="home-btn">🏠 Home</a>
+            <h1>Doodle Jump</h1>
+        </div>
+        <p>Jump from platform to platform and climb as high as you can! Use arrow keys to move.</p>
+    </header>
+    <div class="game-container">
+        <div class="score-display">
+            <span class="score-label">Score</span>
+            <span class="score-value" id="score">0</span>
+            <span class="best-score" id="best-score">Best: 0</span>
+        </div>
+        
+        <canvas id="game-canvas" width="400" height="600"></canvas>
+        
+        <p class="instructions" id="instructions">Use Left/Right Arrow Keys or A/D to Move</p>
+
+        <div class="mobile-controls" id="mobileControls">
+            <button class="control-btn left" id="btn-left">←</button>
+            <button class="control-btn right" id="btn-right">→</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="game-over-overlay">
+        <div class="game-over-modal">
+            <h2 class="game-over-title">Game Over</h2>
+            <div class="final-score" id="final-score">0</div>
+            <p class="final-score-label">Final Score</p>
+            <p class="new-best" id="new-best">🏆 New Best!</p>
+            <button class="play-again-btn" id="play-again-btn">Play Again</button>
+        </div>
+    </div>
+
+    <div class="overlay active" id="instructions-overlay">
+        <div class="instructions-modal">
+            <h2 class="instructions-title">How to Play</h2>
+            <div class="instructions-content">
+                <div class="instruction-section">
+                    <h3>🎯 Goal</h3>
+                    <p>Climb as high as you can by jumping from platform to platform!</p>
+                </div>
+                <div class="instruction-section">
+                    <h3>🎮 Controls</h3>
+                    <p><strong>Desktop:</strong> Use Left/Right Arrow Keys or A/D to move</p>
+                    <p><strong>Mobile:</strong> Use the on-screen buttons</p>
+                </div>
+                <div class="instruction-section">
+                    <h3>🟦 Blue Platforms</h3>
+                    <p>Normal platforms - bounce on them to jump higher</p>
+                </div>
+                <div class="instruction-section">
+                    <h3>🟠 Orange Platforms</h3>
+                    <p>Moving platforms - they move side to side for extra challenge</p>
+                </div>
+                <div class="instruction-section">
+                    <h3>🟥 Red Platforms</h3>
+                    <p>Breakable platforms - they break after one jump!</p>
+                </div>
+                <div class="instruction-section">
+                    <h3>🟩 Green Platforms (⭐)</h3>
+                    <p>Checkpoints - land on them to save your progress and respawn here if you fall</p>
+                </div>
+                <div class="instruction-section">
+                    <h3>💡 Tips</h3>
+                    <p>• Go off one side of the screen to appear on the other</p>
+                    <p>• Use checkpoints strategically - you can only respawn if you're 500+ points past your last checkpoint</p>
+                </div>
+            </div>
+            <button class="start-btn" id="start-btn">Start Game</button>
+        </div>
+    </div>
+
+    <script src="doodle-jump.js" defer></script>
+</body>
+</html>
