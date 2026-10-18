@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%233b82f6' d='M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/%3E%3C/svg%3E">
+    <title>Breakout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="breakout.css">
+</head>
+<body>
+    <header class="game-header">
+        <div class="header-nav">
+            <a href="../index.html" class="home-btn">🏠 Home</a>
+            <h1>Breakout</h1>
+        </div>
+        <p>Break all the bricks! Use arrow keys to move the paddle.</p>
+    </header>
+    <div class="game-container">
+        <div class="score-display">
+            <span class="score-label">Score</span>
+            <span class="score-value" id="score">0</span>
+            <span class="lives-label">Lives</span>
+            <span class="lives-value" id="lives">3</span>
+            <span class="best-score" id="best-score">Best: 0</span>
+        </div>
+        
+        <canvas id="game-canvas" width="480" height="640"></canvas>
+        
+        <p class="instructions" id="instructions">Use Left/Right Arrow Keys or A/D to Move</p>
+
+        <div class="mobile-controls" id="mobileControls">
+            <button class="control-btn left" id="btn-left">←</button>
+            <button class="control-btn right" id="btn-right">→</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="game-over-overlay">
+        <div class="game-over-modal">
+            <h2 class="game-over-title" id="game-over-title">Game Over</h2>
+            <div class="final-score" id="final-score">0</div>
+            <p class="final-score-label">Final Score</p>
+            <p class="new-best" id="new-best">🏆 New Best!</p>
+            <button class="play-again-btn" id="play-again-btn">Play Again</button>
+        </div>
+    </div>
+
+    <div class="overlay active" id="instructions-overlay">
+        <div class="instructions-modal">
+            <h2 class="instructions-title">How to Play</h2>
+            <div class="instructions-content">
+                <div class="instruction-section">
+                    <h3>🎯 Goal</h3>
+                    <p>Break all the bricks by bouncing the ball off your paddle!</p>
+                </div>
+                <div class="instruction-section">
+                    <h3>🎮 Controls</h3>
+                    <p><strong>Desktop:</strong> Use Left/Right Arrow Keys or A/D to move paddle</p>
+                    <p><strong>Mobile:</strong> Use the on-screen buttons</p>
+                </div>
+                <div class="instruction-section">
+                    <h3>🔵 Ball Physics</h3>
+                    <p>The ball angle changes based on where it hits the paddle - hit the edges for sharp angles!</p>
+                </div>
+                <div class="instruction-section">
+                    <h3>🟦 Bricks</h3>
+                    <p><strong>Blue:</strong> 1 hit | <strong>Green:</strong> 2 hits | <strong>Orange:</strong> 3 hits | <strong>Red:</strong> 4 hits</p>
+                </div>
+                <div class="instruction-section">
+                    <h3>⚡ Power-ups</h3>
+                    <p><strong>Wider Paddle:</strong> Makes your paddle wider</p>
+                    <p><strong>Multi-ball:</strong> Spawns extra balls</p>
+                    <p><strong>Slow Ball:</strong> Slows down all balls</p>
+                    <p><strong>Extra Life:</strong> Gives you an extra life</p>
+                </div>
+                <div class="instruction-section">
+                    <h3>💡 Tips</h3>
+                    <p>• Catch power-ups by letting them fall on your paddle</p>
+                    <p>• Use ball angle control to target specific bricks</p>
+                    <p>• Some bricks require multiple hits to break</p>
+                </div>
+            </div>
+            <button class="start-btn" id="start-btn">Start Game</button>
+        </div>
+    </div>
+
+    <script src="breakout.js" defer></script>
+</body>
+</html>
