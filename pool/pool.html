@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%2310b981'/%3E%3Ccircle cx='12' cy='12' r='6' fill='%23065f46'/%3E%3C/svg%3E">
+    <title>Pool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="pool.css">
+</head>
+<body>
+    <header class="game-header">
+        <div class="header-nav">
+            <a href="../index.html" class="home-btn">🏠 Home</a>
+            <h1>Pool</h1>
+        </div>
+        <p>Sink all your balls! Click and drag from the cue ball to aim and set power.</p>
+    </header>
+    <div class="game-container">
+        <div class="score-display">
+            <span class="score-label">Score</span>
+            <span class="score-value" id="score">0</span>
+            <span class="shots-label">Shots</span>
+            <span class="shots-value" id="shots">0</span>
+            <span class="best-score" id="best-score">Best: 0</span>
+        </div>
+        
+        <canvas id="game-canvas" width="800" height="450"></canvas>
+        
+        <p class="instructions" id="instructions">Click and drag from the white cue ball to aim</p>
+    </div>
+
+    <div class="overlay" id="game-over-overlay">
+        <div class="game-over-modal">
+            <h2 class="game-over-title" id="game-over-title">Game Over</h2>
+            <div class="final-score" id="final-score">0</div>
+            <p class="final-score-label">Final Score</p>
+            <p class="new-best" id="new-best">🏆 New Best!</p>
+            <button class="play-again-btn" id="play-again-btn">Play Again</button>
+        </div>
+    </div>
+
+    <div class="overlay active" id="instructions-overlay">
+        <div class="instructions-modal">
+            <h2 class="instructions-title">How to Play</h2>
+            <div class="instructions-content">
+                <div class="instruction-section">
+                    <h3>🎯 Goal</h3>
+                    <p>Sink all the colored balls into the pockets! Try to do it in as few shots as possible.</p>
+                </div>
+                <div class="instruction-section">
+                    <h3>🎮 Controls</h3>
+                    <p><strong>Aim & Power:</strong> Click on the white cue ball and drag away to aim. The further you drag, the more power!</p>
+                    <p><strong>Shoot:</strong> Release the mouse to take your shot.</p>
+                </div>
+                <div class="instruction-section">
+                    <h3>⚪ Ball Physics</h3>
+                    <p>Balls bounce off cushions and each other realistically. Use angles to your advantage!</p>
+                </div>
+                <div class="instruction-section">
+                    <h3>🎱 Balls</h3>
+                    <p><strong>White:</strong> Cue ball (your ball)</p>
+                    <p><strong>Colored:</strong> Target balls (sink them all!)</p>
+                </div>
+                <div class="instruction-section">
+                    <h3>💡 Tips</h3>
+                    <p>• Plan your shots carefully - use cushions for tricky angles</p>
+                    <p>• Don't sink the cue ball or you'll get a penalty</p>
+                    <p>• Watch the power meter for precise control</p>
+                </div>
+            </div>
+            <button class="start-btn" id="start-btn">Start Game</button>
+        </div>
+    </div>
+
+    <script src="pool.js" defer></script>
+</body>
+</html>
